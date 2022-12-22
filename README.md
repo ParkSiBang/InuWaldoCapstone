@@ -220,8 +220,8 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 김정우 : 백엔드 api구현 - 경로 추천 알고리즘 구현<br>
 박시현 : 백엔드 api구현 - 경로 추천 알고리즘 구현<br>
 
-# 2022_겨울방학_활동<br/>
-<hr/>
+# 2022 겨울방학 활동기록<br>
+
 # 12/22 회의<br>
 참여자: 조보겸, 김정우, 박시현<br>
 <br/>
