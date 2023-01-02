@@ -1,0 +1,3 @@
+#intelij에서 자동생성되는 파일과 .idea파일 제외 (git ignore)
+.gradle
+.idea
