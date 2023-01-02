@@ -19,15 +19,18 @@ apply plugin: 'io.spring.dependency-management' //스프링부트의 의존성�
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-repositories {
+repositories { // 의존성 라이브러리들을 받을 원격저장소 지정 mavenCentral보다 jcenter가 더 최신+ 간단 + mavenCentral에도 자동 연동
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-}
+    //compile('org.springframework.boot:spring-boot-starter-web:') 지금은 implementation으로 대체되었다.
+    implementation('org.springframework.boot:spring-boot-starter-web:')
+    //testCompile('org.springframework.boot:spring-boot-starter-test:')
+    testImplementation('org.springframework.boot:spring-boot-starter-test:')
 
-test {
-    useJUnitPlatform()
+
+
+
 }
