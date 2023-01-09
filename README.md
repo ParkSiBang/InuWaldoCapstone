@@ -260,3 +260,9 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 토의 내용<br>
 1. 구역 내 어린이 보호구역 검은 선으로 표시
 2. 회의 시간동안 개발 공부
+
+# 1/9 회의
+참여자: 김정우, 박시현<br>
+<br/>
+토의 내용<br>
+1. api 정리
