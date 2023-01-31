@@ -266,3 +266,10 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 <br/>
 토의 내용<br>
 1. api 정리
+
+# 1/31 회의
+참여자: 조보겸, 김정우, 박시현<br>
+<br/>
+토의 내용<br>
+1. 프론트 개발 계획
+2. 데이터베이스 연동
