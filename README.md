@@ -279,4 +279,4 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 <br/>
 토의 내용<br>
 1. 프론트 환경 설정과 연동
-2. 백엔드 테이블 생
+2. 백엔드 테이블 생성
