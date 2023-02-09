@@ -4,9 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter //롬복 클래스내의 getter 자동생성
 @NoArgsConstructor // 기본생성자 자동 추가
@@ -14,18 +12,22 @@ import javax.persistence.Id;
 
 public class Users {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //pk생성규칙
+    private Long id;
+
+    @Column
     private String userId;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private Float drivingScore;
 
-    @Column(nullable = false)
+    @Column
     private Long mileage;
 
     @Builder
@@ -36,7 +38,4 @@ public class Users {
         this.drivingScore=drivingScore;
         this.mileage=mileage;
     }
-
-
-
 }
