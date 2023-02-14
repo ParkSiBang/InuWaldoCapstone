@@ -23,8 +23,7 @@ public class LocalNodesTest extends TestCase {
         localNodesRepository.save(LocalNodes.builder()
                 .nodeId(1001)
                 .latitude(98.2)
-                .longitude(99.9).build()
-        );
+                .longitude(99.9).build());
         List<LocalNodes> localNodesList = localNodesRepository.findAll();
         Optional<LocalNodes> localNodes = localNodesList.stream()
                 .filter(localnode -> localnode.getNodeId().equals(1001)).findAny();
