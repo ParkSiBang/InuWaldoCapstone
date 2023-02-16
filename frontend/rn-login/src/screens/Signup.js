@@ -9,6 +9,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 */}
 
+// firebase 저장소 face.png 불러오기
 const DEFAULT_PHOTO = 'https://firebasestorage.googleapis.com/v0/b/login-dba07.appspot.com/o/face.png?alt=media'
 
 const Container = styled.View`
