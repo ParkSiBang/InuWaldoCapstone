@@ -313,5 +313,5 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 참여자: 조보겸, 김정우, 박시현<br>
 <br/>
 토의 내용<br>
-1. 개발 상황 피드백을 위해 3/9까지 GitPush
+1. 프로젝트 현황 피드백을 위해 3/9까지 GitPush
 2. 피드백를 위한 개별로 개발 마무리 작업 진행
