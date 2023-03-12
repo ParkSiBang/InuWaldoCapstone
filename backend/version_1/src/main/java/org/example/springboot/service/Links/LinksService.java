@@ -13,9 +13,7 @@ import java.util.*;
 public class LinksService {
     private final LinksRepository linksRepository;
 
-
-
-    private Double weightBySafe(Links link){
+    public Double weightBySafe(Links link){
         Double result=0D;
         Double dist=link.getDistance();
         Integer accidentNum=link.getAccidentNum();

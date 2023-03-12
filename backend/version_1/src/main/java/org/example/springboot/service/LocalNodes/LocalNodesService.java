@@ -3,7 +3,9 @@ package org.example.springboot.service.LocalNodes;
 import lombok.RequiredArgsConstructor;
 import org.example.springboot.domain.localNodes.LocalNodes;
 import org.example.springboot.domain.localNodes.LocalNodesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class LocalNodesService {
     private final LocalNodesRepository localNodesRepository;
 
     //경도와 위도를 받아서 가장 가까운 노드 nodeId반환
+
     public Integer closestNode(Double longitude, Double latitude){
         List<LocalNodes> localNodesList= localNodesRepository.findAll();
         Integer result = null;
@@ -32,7 +35,7 @@ public class LocalNodesService {
     }
     //다익스트라 이용 최단거리 반환.
 
-    static Double getDistance(Double lo,Double la, LocalNodes node) {
+    public Double getDistance(Double lo,Double la, LocalNodes node) {
         // Math.pow() <- 제곱
         // Math.sqrt() <- 루트
         Double nodeLo, nodeLa;
