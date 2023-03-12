@@ -22,7 +22,7 @@ public class Links {
     private Integer destNode;
 
     @Column
-    private Boolean childrenZone;
+    private Integer childrenZone;
 
     @Column
     private Integer accidentNum;
@@ -31,21 +31,20 @@ public class Links {
     private Integer carEntranceNum;
 
     @Column
-    private Integer distance;
+    private Double distance;
 
-    @Column
-    private Double weight;
+
 
     @Builder
-    public Links(Integer startNode, Integer destNode, Boolean childrenZone, Integer accidentNum
-    , Integer carEntranceNum, Integer distance, Double weight){
+    public Links(Integer startNode, Integer destNode, Integer childrenZone, Integer accidentNum
+    , Integer carEntranceNum, Double distance){
         this.startNode = startNode;
         this.destNode = destNode;
         this.childrenZone = childrenZone;
         this.accidentNum = accidentNum;
         this.carEntranceNum = carEntranceNum;
         this.distance = distance;
-        this.weight = weight;
+
     }
 
 }

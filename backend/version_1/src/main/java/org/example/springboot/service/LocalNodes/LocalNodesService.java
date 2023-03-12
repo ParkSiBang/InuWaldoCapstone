@@ -12,6 +12,7 @@ import java.util.List;
 public class LocalNodesService {
     private final LocalNodesRepository localNodesRepository;
 
+    //경도와 위도를 받아서 가장 가까운 노드 nodeId반환
     public Integer closestNode(Double longitude, Double latitude){
         List<LocalNodes> localNodesList= localNodesRepository.findAll();
         Integer result = null;
@@ -29,6 +30,8 @@ public class LocalNodesService {
         return result;
 
     }
+    //다익스트라 이용 최단거리 반환.
+
     static Double getDistance(Double lo,Double la, LocalNodes node) {
         // Math.pow() <- 제곱
         // Math.sqrt() <- 루트
