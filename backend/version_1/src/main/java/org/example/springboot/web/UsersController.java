@@ -1,25 +1,37 @@
 package org.example.springboot.web;
 
 import lombok.Getter;
-import org.example.springboot.web.dto.HelloResponseDto;
-import org.example.springboot.web.dto.JoinResponseDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.example.springboot.domain.users.Users;
+import org.example.springboot.service.Users.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("users")
 public class UsersController {
-    @GetMapping("/users")
-    public String users(){
-        return "users";
+
+    private final UsersService usersService;
+
+    @Autowired
+    public UsersController(UsersService usersService) {
+        this.usersService = usersService;
     }
-    @GetMapping("/users/join")
-    public JoinResponseDto join(@RequestParam("userId") String userId,
-                                     @RequestParam("password") String password,
-                                     @RequestParam("name") String name,
-                                     @RequestParam("drivingScore") Float drivingScore,
-                                     @RequestParam("mileage") Long mileage
-                                     ) {
-        return new JoinResponseDto(userId,password,name,drivingScore,mileage);
+
+    @PostMapping("/users/join")
+    public void join(@RequestParam("userId") String userId,
+                     @RequestParam("password") String password,
+                     @RequestParam("name") String name,
+                     @RequestParam("drivingScore") Float drivingScore,
+                     @RequestParam("mileage") Long mileage){
+        Users user = new Users();
+        user.setUserId(userId);
+        user.setPassword(password);
+        user.setName(name);
+        user.setDrivingScore(drivingScore);
+        user.setMileage(mileage);
+        usersService.join(user);
+
+        //return "redirect:/"; 홈화면으로 이동
     }
 }

@@ -6,9 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Getter //롬복 클래스내의 getter 자동생성
-@NoArgsConstructor // 기본생성자 자동 추가
-@Entity //테이블과 링크될 클래스임을 나타냄. 기본적으로 클래스이름을 언더스코어네이밍으로 바꿔 테이블과 매칭합니다.
+@Getter
+@NoArgsConstructor
+@Table(name = "users")
+@Entity
 
 public class Users {
     @Id
@@ -17,18 +18,33 @@ public class Users {
 
     @Column
     private String userId;
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
 
     @Column
     private String password;
+    public void setPassword(String password){
+        this.password = password;
+    }
 
     @Column
     private String name;
+    public void setName(String name){
+        this.name = name;
+    }
 
     @Column
     private Float drivingScore;
+    public void setDrivingScore(Float drivingScore){
+        this.drivingScore = drivingScore;
+    }
 
     @Column
     private Long mileage;
+    public void setMileage(Long userId){
+        this.mileage = mileage;
+    }
 
     @Builder
     public Users(String userId, String password, String name, Float drivingScore, Long mileage){
