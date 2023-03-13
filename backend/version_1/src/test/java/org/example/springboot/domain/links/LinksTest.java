@@ -23,11 +23,11 @@ public class LinksTest extends  TestCase {
         linksRepository.save(Links.builder()
                 .startNode(1050)
                 .destNode(1051)
-                .childrenZone(false)
+                .childrenZone(0)
                 .accidentNum(1)
                 .carEntranceNum(1)
-                .distance(3)
-                .weight(1.2).build());
+                .distance(3.0D)
+                .build());
         List<Links> linksList = linksRepository.findAll();
         Optional<Links> links = linksList.stream()
                 .filter(link -> link.getStartNode().equals(1050)).findAny();
@@ -37,8 +37,8 @@ public class LinksTest extends  TestCase {
         assertThat(links.get().getChildrenZone()).isEqualTo(false);
         assertThat(links.get().getAccidentNum()).isEqualTo(1);
         assertThat(links.get().getCarEntranceNum()).isEqualTo(1);
-        assertThat(links.get().getDistance()).isEqualTo(3);
-        assertThat(links.get().getWeight()).isEqualTo(1.2);
+        assertThat(links.get().getDistance()).isEqualTo(3.0D);
+
 
     }
 }

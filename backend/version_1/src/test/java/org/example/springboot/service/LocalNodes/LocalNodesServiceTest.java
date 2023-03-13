@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LocalNodesServiceTest extends TestCase {
     @Autowired
     LocalNodesService localNodesService;
-    /*임시테스트
+
     @Test
     public void testClosestNode() {
         //given
@@ -25,10 +25,10 @@ public class LocalNodesServiceTest extends TestCase {
         //when
         Optional<Integer> closestNodeId =Optional.ofNullable(localNodesService.closestNode(longitude,latitude));
         //
-        assertThat(closestNodeId.get()).isEqualTo(1003);
+        assertThat(closestNodeId.get()).isEqualTo(3001);
 
     }
-    */
+
 
 
 
