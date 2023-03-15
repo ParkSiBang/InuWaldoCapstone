@@ -1,13 +1,16 @@
 package org.example.springboot.service.LocalNodes;
 
 import lombok.RequiredArgsConstructor;
+import org.example.springboot.domain.links.Links;
 import org.example.springboot.domain.localNodes.LocalNodes;
 import org.example.springboot.domain.localNodes.LocalNodesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 @Service
 @RequiredArgsConstructor //final이 선언된 모든 필드를 인자값으로하는 생성자를 대신 생성 (리포지토리를 대신 생성)
@@ -49,5 +52,28 @@ public class LocalNodesService {
         lod = (Double) Math.pow((lo-nodeLo),2);
         d = Math.sqrt(lad+lod);
         return d;
+    }
+    public Queue<Route> insertCoordinate(Queue<Links> input){
+        Queue<Route> result = new LinkedList<>();
+        while(!input.isEmpty()){
+            Links l = input.poll();
+            Integer s= l.getStartNode();
+            Integer d= l.getDestNode();
+            boolean childZone=false;
+            if(l.getChildrenZone() != 0) childZone=true;
+            LocalNodes sNode=localNodesRepository.findByNodeId(s).get();
+            LocalNodes dNode=localNodesRepository.findByNodeId(d).get();
+            Route r = Route.builder()
+                    .startLatitude(sNode.getLatitude())
+                    .startLongitude(sNode.getLongitude())
+                    .destLatitude(dNode.getLatitude())
+                    .destLongitude(dNode.getLongitude())
+                    .childZone(childZone)
+                    .accidentNum(l.getAccidentNum())
+                    .carEntranceNum(l.getCarEntranceNum())
+                    .build();
+            result.add(r);
+        }
+        return result;
     }
 }

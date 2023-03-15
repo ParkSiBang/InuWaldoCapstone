@@ -1,118 +1,189 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState, useEffect } from 'react';
+import { View, Text } from "react-native";
+import MapView, { Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import {Marker} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
+import { TouchableOpacity, StyleSheet } from "react-native";
+import moment from 'moment';
+import useInterval from './customHooks/useInterval';
+import axios from 'axios';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+function App() {
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLogitude] = useState(0);
+  const [time, setTime] = useState(moment.duration(0,'seconds'));
+  const [focus, setFocus] = useState(true);
+  const [region, setRegion]=useState({
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0.0922, 
+    longitudeDelta: 0.0421
+  })
+  const tick = () => {
+    setTime(prevTime => prevTime.clone().add(1, 'seconds'));
   };
+  const [route,setRoute] = useState("");
+  useEffect(() => {
+    setRegion(
+      {
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 0.0922, 
+        longitudeDelta: 0.0421
+      }
+    )
+  }, [latitude,longitude]);
+  const timer = useInterval(() => {
+    if (focus) {
+      tick();
+    }
+    
+  }, 1000);
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+  
+
+  const timerSwitch = () =>{
+    if(!focus){
+      setFocus(true)
+    }
+    else{
+      setFocus(false);
+    }
+  }
+  const getRoutes = () =>{
+    
+    /*axios.post("http://localhost:8080/path",
+    {
+      startLatitude: latitude,
+      startLongitude: longitude,
+      destLatitude: 37.385805, //임의로 3010노드를 목적지로 삼음
+      destLongitude: 126.645977
+    }).then(function (res){
+      console.log(res);
+    }).catch(function (error) {
+      console.log(error);
+    });
+    */
+    axios.get("http://localhost:8080/hello").then(function (res){
+      console.log(res);
+    }).catch(function (error){
+      console.log(error);
+    });
+  
+  }
+    
+  
+  
+
+  const geoLocation = () => {
+    Geolocation.getCurrentPosition(
+        position => {
+            const latitude = parseFloat(JSON.stringify(position.coords.latitude));
+            const longitude = parseFloat(JSON.stringify(position.coords.longitude));
+
+            setLatitude(latitude);
+            setLogitude(longitude);
+        },
+        error => { console.log(error.code, error.message); },
+        //{enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
+    )
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+
+  return (
+    <>
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity onPress={() => geoLocation()}>
+          <Text> Get GeoLocation </Text>
+        </TouchableOpacity>
+        
+        <Text> latitude: {latitude} </Text>
+        <Text> longitude: {longitude} </Text>
+
+        <TouchableOpacity onPress={() => timerSwitch()}>
+            <Text>
+              Timer
+            </Text>
+        </TouchableOpacity>
+        <Text> time: {time.asMilliseconds()}</Text>
+        <Text> route: {route}</Text>
+
+        <TouchableOpacity onPress={() => getRoutes()}>
+            <Text>
+              현재위치 전송
+            </Text>
+        </TouchableOpacity>
+
+        <MapView
+          showsUserLocation={true}
+          region={region}
+          style={{ flex: 1 }}
+          provider={PROVIDER_GOOGLE}
+          
+        >
+          <Polyline
+          strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+          strokeColors={['#7F0000']}
+          strokeWidth={6}
+
+          coordinates={[
+          {
+            latitude: 37.388485,
+            longitude: 126.641808,
+          },
+          {
+            latitude: 37.388325            ,
+            longitude: 126.642054            ,
+          },
+          {
+            latitude: 37.388436
+            ,
+            longitude: 126.642309
+            ,
+          },
+          {
+            latitude: 37.388494
+            ,
+            longitude: 126.642259
+            ,
+          },
+          {
+            latitude: 37.388334
+            ,
+            longitude: 126.642515
+            ,
+          },
+          {
+            latitude: 37.388127
+            ,
+            longitude: 126.642338
+
+            ,
+          },
+          {
+            latitude: 37.387006
+
+            ,
+            longitude: 126.644011
+
+            ,
+          },
+          {
+            latitude: 37.386044
+            ,
+            longitude: 126.645713
+            ,
+          },
+          ]}>
+
+          </Polyline>
+          
+        </MapView>
+
+        
+      </View>
+    </>
+  );
+}
 
 export default App;

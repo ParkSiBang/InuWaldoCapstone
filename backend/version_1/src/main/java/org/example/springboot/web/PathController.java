@@ -3,7 +3,9 @@ package org.example.springboot.web;
 import lombok.RequiredArgsConstructor;
 import org.example.springboot.domain.links.Links;
 import org.example.springboot.service.Links.LinksService;
+import org.example.springboot.service.Links.Path;
 import org.example.springboot.service.LocalNodes.LocalNodesService;
+import org.example.springboot.service.LocalNodes.Route;
 import org.example.springboot.web.dto.PathRequestDto;
 import org.example.springboot.web.dto.PathResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +52,9 @@ public class PathController {
         Integer destNode = localNodesService.closestNode(destLongitude,destLatitude);
         // 경로 탐색
         Queue<Links> fastest = linksService.findPath(startNode,destNode,true);
-
+        Queue<Route> result=localNodesService.insertCoordinate(fastest);
         PathResponseDto response = new PathResponseDto(fastest);
+
 
         return response;
     }
