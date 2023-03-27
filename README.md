@@ -329,3 +329,9 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 토의 내용<br>
 1. 피드백을 내용을 토대로 아이디어 회의
 2. 운전점수 측정 요소 
+
+# 3/20 회의
+참여자: 조보겸, 김정우, 박시현<br>
+<br/>
+토의 내용<br>
+1. 각자 개발
