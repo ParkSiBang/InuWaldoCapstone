@@ -53,7 +53,7 @@ public class PathController {
         // 경로 탐색
         Queue<Links> fastest = linksService.findPath(startNode,destNode,true);
         Queue<Route> result=localNodesService.insertCoordinate(fastest);
-        PathResponseDto response = new PathResponseDto(fastest);
+        PathResponseDto response = new PathResponseDto(result);
 
 
         return response;

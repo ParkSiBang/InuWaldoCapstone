@@ -10,6 +10,6 @@ import java.util.Queue;
 @Getter
 @RequiredArgsConstructor
 public class PathResponseDto {
-    private final Queue<Links> fastestPath;
+    private final Queue<Route> fastestPath;
     //private final Queue<Links> safestPath;
 }

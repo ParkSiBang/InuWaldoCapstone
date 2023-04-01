@@ -1,13 +1,24 @@
 package org.example.springboot.web.dto;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+
 public class PathRequestDto {
-    private final Double startLatitude;
-    private final Double startLongitude;
-    private final Double destLatitude;
-    private final Double destLongitude;
+    Double startLatitude;
+    Double startLongitude;
+    Double destLatitude;
+    Double destLongitude;
+
+    @Builder
+    public PathRequestDto(Double startLatitude, Double startLongitude, Double destLatitude, Double destLongitude){
+        this.startLatitude = startLatitude;
+        this.startLongitude=startLongitude;
+        this.destLatitude=destLatitude;
+        this.destLongitude=destLongitude;
+    }
 }
