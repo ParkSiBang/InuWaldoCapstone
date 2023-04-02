@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -53,8 +54,8 @@ public class LocalNodesService {
         d = Math.sqrt(lad+lod);
         return d;
     }
-    public Queue<Route> insertCoordinate(Queue<Links> input){
-        Queue<Route> result = new LinkedList<>();
+    public ArrayList<Route> insertCoordinate(Queue<Links> input){
+        ArrayList<Route> result = new ArrayList<>();
         while(!input.isEmpty()){
             Links l = input.poll();
             Integer s= l.getStartNode();
@@ -72,7 +73,7 @@ public class LocalNodesService {
                     .accidentNum(l.getAccidentNum())
                     .carEntranceNum(l.getCarEntranceNum())
                     .build();
-            result.add(r);
+            result.add(0,r);
         }
         return result;
     }

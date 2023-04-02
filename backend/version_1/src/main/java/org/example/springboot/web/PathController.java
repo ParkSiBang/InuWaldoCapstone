@@ -11,7 +11,10 @@ import org.example.springboot.web.dto.PathResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Queue;
+
+
 
 @RestController
 @RequiredArgsConstructor
@@ -47,12 +50,13 @@ public class PathController {
         Double startLongitude= pathRequest.getStartLongitude();
         Double destLatitude= pathRequest.getDestLatitude();
         Double destLongitude= pathRequest.getDestLongitude();
+        System.out.println("param:"+pathRequest.getStartLatitude());
         // 노드 지정
         Integer startNode = localNodesService.closestNode(startLongitude,startLatitude);
         Integer destNode = localNodesService.closestNode(destLongitude,destLatitude);
         // 경로 탐색
         Queue<Links> fastest = linksService.findPath(startNode,destNode,true);
-        Queue<Route> result=localNodesService.insertCoordinate(fastest);
+        ArrayList<Route> result=localNodesService.insertCoordinate(fastest);
         PathResponseDto response = new PathResponseDto(result);
 
 
