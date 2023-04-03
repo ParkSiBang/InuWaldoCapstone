@@ -353,5 +353,5 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
   -야간운전: 항목마다 1.5 배 추가 감점
   
   -거리별 운전점수에 대한 평균 적용<br>
-5. 프론트 화면 구현 완료하기
-6. 백 DB수정
+5. 프론트 화면 구현 완료하기<br>
+6. 백 DB수정<br>
