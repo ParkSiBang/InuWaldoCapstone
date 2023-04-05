@@ -5,38 +5,50 @@ import Geolocation from '@react-native-community/geolocation';
 import { Button } from './components';
 import axios from 'axios';
 const {width, height} = Dimensions.get('screen');
-
+import { 
+    accelerometer,
+    gyroscope,
+    setUpdateIntervalForType,
+    SensorTypes 
+    } from "react-native-sensors";
 export default function App() {
     const [region, setRegion] = useState(null); 
     const [now,setNow] =useState(null);
     const [destination, setDestination] = useState(null);
     const [routes,setRoutes] = useState([]);
-
+    const [accCheckMode,setAccCheckmode]=useState(false);
+    const [accData,setAccData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0});
+    const [accMessage,setAccMessage]=useState(false);
+    setUpdateIntervalForType(SensorTypes.accelerometer, 100); // defaults to 100ms
+    let px=0;
+    let py=0;
+    let pz=9.8;
+    let subscription = null
+    
     useEffect(() => {
         geoLocation();
+        
     }, [])
-    /*
-
-    function getMyLocation(){
-        Geolocation.getCurrentPosition(
-            (position) => {
-                console.log('LAT: ', position.coords.latitude);
-                console.log('LONG: ', position.coords.longitude);
-
-                setRegion({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.922,
-                    longitudeDelta: 0.0421
-                })
-            },
-            () => { console.log("에러")}, {
-                enableHighAccuracy: true,
-                timeout: 2000,
-            }
-        );
-    }
-    */
+    useEffect(() => {
+        if(accCheckMode){
+            subscription = accelerometer.subscribe(({ x, y, z, timestamp }) =>
+                {
+                    if(Math.sqrt(px*px+py*py+pz*pz)+2 < Math.sqrt(x*x+y*y+z*z)) setAccMessage(true); //2m/ss 이상 가속시 경고
+                    px=x;
+                    py=y;
+                    pz=z;
+                    setAccData({x:x,y:y,z:z});
+                });
+        }
+        else{
+                console.log("급가속 감지 해제")
+                if(subscription)
+                subscription.unsubscribe();
+              
+        }
+        
+    }, [accCheckMode])
+    
     
     const geoLocation = () => {
         Geolocation.getCurrentPosition(
@@ -88,18 +100,13 @@ export default function App() {
              }
         }
     }
-        
-     
-    
+  
      
 
     function newMarker(e){ //목적지 설정
         console.log(e.nativeEvent.coordinate.latitude);
         console.log(e.nativeEvent.coordinate.longitude);
-        
-        
         let data = {
-            
             coords:{
                 latitude: e.nativeEvent.coordinate.latitude,
                 longitude: e.nativeEvent.coordinate.longitude
@@ -113,8 +120,17 @@ export default function App() {
 
     return (
         <View style={styles.container}>
-            <Button title="hello" onPress={postNodes}>
-            </Button>
+            {accMessage? <Button title="급가속 경고" onPress={()=>setAccMessage(false)} containerStyle={styles.warining}></Button> : null}
+            <Button title="경로안내" onPress={postNodes}></Button>
+            <Button title="급가속체크" onPress={()=>{
+                if(accCheckMode){
+                    setAccCheckmode(false)
+                }else{
+                    setAccCheckmode(true)
+                }
+                }}></Button>
+            <Text>가속도: {Math.sqrt(accData.x*accData.x+accData.y*accData.y+accData.z*accData.z) - 9.8 }</Text>
+            
             <MapView
                 onMapReady={() => {
                     Platform.OS === 'android' ?
@@ -144,9 +160,13 @@ export default function App() {
                 coordinates={routes}
                 >
                 </Polyline>
-                   
+                
+                
+            
             </MapView>
+            
         </View>
+        
     );
 }
 
@@ -155,4 +175,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center'
     },
+    warining:{
+        backgroundColor: "orange"
+    }
 })
