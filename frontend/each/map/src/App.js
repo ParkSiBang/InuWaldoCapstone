@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Platform, PermissionsAndroid, Dimensions} from 'react-native';
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import MapView, {Marker, Polyline, AnimatedRegion, MarkerAnimated} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { Button } from './components';
 import axios from 'axios';
@@ -11,24 +11,65 @@ import {
     setUpdateIntervalForType,
     SensorTypes 
     } from "react-native-sensors";
+import { getDistance } from 'geolib'; //좌표 사이거리 계산
 export default function App() {
     const [region, setRegion] = useState(null); 
     const [now,setNow] =useState(null);
-    const [destination, setDestination] = useState(null);
-    const [routes,setRoutes] = useState([]);
-    const [accCheckMode,setAccCheckmode]=useState(false);
-    const [accData,setAccData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0});
-    const [accMessage,setAccMessage]=useState(false);
+    const [destination, setDestination] = useState(null); //목적지 좌표
+    const [routes,setRoutes] = useState([]); //안내 경로
+    const [accCheckMode,setAccCheckmode]=useState(false); //가속체크 on off
+    const [gyroCheckMode,setGyroCheckMode]=useState(false); //방향체크 on off
+    const [accData,setAccData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0}); //가속센서 데이터
+    const [gyroData,setGyroData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0}); //방향센서 데이터
+    const [accMessage,setAccMessage]=useState(false); //급가속 경고 메시지 on off
+    const [gyroMessage,setGyroMessage]=useState(false);
+    const [coordinates, setCoordinates] = useState([]); //이동경로
+    const [distance, setDistance] = useState(0); //이동거리
+    const [prevLocation, setPrevLocation] = useState(null);
+
     setUpdateIntervalForType(SensorTypes.accelerometer, 100); // defaults to 100ms
+    setUpdateIntervalForType(SensorTypes.gyroscope, 100); // defaults to 100ms
     let px=0;
     let py=0;
     let pz=9.8;
-    let subscription = null
+    let subscription = null; //가속
+    let subscription2 = null; //자이로
+
+    
     
     useEffect(() => {
         geoLocation();
-        
-    }, [])
+            }
+    , [])
+
+    useEffect(() => {
+        const watchId = Geolocation.watchPosition(
+          position => {
+            const { latitude, longitude } = position.coords;
+            const newCoordinate = { latitude, longitude };
+            setCoordinates([...coordinates, newCoordinate]);
+
+            if (prevLocation) {
+                const newDistance = getDistance(prevLocation, position.coords);
+                setDistance(distance + newDistance);
+              }
+            setPrevLocation(position.coords);
+          },
+          error => {
+            console.log(error);
+          },
+          {
+            enableHighAccuracy: true,
+            distanceFilter: 10,
+            interval: 1000,
+            fastestInterval: 1000
+          }
+        );
+        return () => {
+          Geolocation.clearWatch(watchId);
+        };
+      }, [coordinates]);
+
     useEffect(() => {
         if(accCheckMode){
             subscription = accelerometer.subscribe(({ x, y, z, timestamp }) =>
@@ -40,14 +81,18 @@ export default function App() {
                     setAccData({x:x,y:y,z:z});
                 });
         }
-        else{
-                console.log("급가속 감지 해제")
-                if(subscription)
-                subscription.unsubscribe();
-              
-        }
+        
         
     }, [accCheckMode])
+    useEffect(() => {
+        if(gyroCheckMode){
+            subscription2 = gyroscope.subscribe(({ x, y, z, timestamp }) =>
+                {
+                    setGyroData({x:x,y:y,z:z});
+                });
+        }
+
+    }, [gyroCheckMode])
     
     
     const geoLocation = () => {
@@ -70,7 +115,7 @@ export default function App() {
             //{enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
         )
     }
-    const postNodes = async () => {
+    const postNodes = async () => { //경로 받아오기
         if(destination == null || now == null){
             console.log("좌표설정이 안되어있습니다.")
         }else{
@@ -118,6 +163,8 @@ export default function App() {
         
     }
 
+
+
     return (
         <View style={styles.container}>
             {accMessage? <Button title="급가속 경고" onPress={()=>setAccMessage(false)} containerStyle={styles.warining}></Button> : null}
@@ -129,8 +176,16 @@ export default function App() {
                     setAccCheckmode(true)
                 }
                 }}></Button>
+            <Button title="방향체크" onPress={()=>{
+                if(accCheckMode){
+                    setGyroCheckMode(false)
+                }else{
+                    setGyroCheckMode(true)
+                }
+                }}></Button>
             <Text>가속도: {Math.sqrt(accData.x*accData.x+accData.y*accData.y+accData.z*accData.z) - 9.8 }</Text>
-            
+            <Text>방향: {gyroData.x}, {gyroData.y}, {gyroData.z} </Text>
+            <Text>이동거리: {distance} </Text>
             <MapView
                 onMapReady={() => {
                     Platform.OS === 'android' ?
@@ -160,7 +215,11 @@ export default function App() {
                 coordinates={routes}
                 >
                 </Polyline>
-                
+                <Polyline
+                    coordinates={coordinates}
+                    strokeColor="#FF0000"
+                    strokeWidth={2}
+                />
                 
             
             </MapView>
