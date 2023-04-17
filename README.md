@@ -365,7 +365,7 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 3. 로그인 기능 구현
 4. 링크 데이터 추가
 
-# 4/10 회의
+# 4/18 회의
 참여자: 조보겸, 김정우, 박시현<br>
 <br/>
 토의 내용<br>
