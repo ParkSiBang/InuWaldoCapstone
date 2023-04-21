@@ -33,20 +33,22 @@ public class Links {
     @Column
     private Double distance;
 
+    @Column
+    private Integer crossWalk;
+
 
 
     @Builder
     public Links(Integer startNode, Integer destNode, Integer childrenZone, Integer accidentNum
-    , Integer carEntranceNum, Double distance){
+    , Integer carEntranceNum, Double distance, Integer crossWalk){
         this.startNode = startNode;
         this.destNode = destNode;
         this.childrenZone = childrenZone;
         this.accidentNum = accidentNum;
         this.carEntranceNum = carEntranceNum;
         this.distance = distance;
-
+        this.crossWalk = crossWalk;
     }
-
 }
 
 

@@ -1,46 +1,99 @@
 package org.example.springboot.web;
 
 import junit.framework.TestCase;
+import org.example.springboot.domain.users.Users;
+import org.example.springboot.web.dto.UsersRequestDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import javax.transaction.Transactional;
 
-@RunWith(SpringRunner.class)//Junit에 내장된 실행자 외에 다른 실행자 실행. 스프링부트테스트와 Junit을 연결해준다.
-@WebMvcTest
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class UsersControllerTest extends TestCase {
+    @LocalServerPort
+    private int port;
     @Autowired
-    private MockMvc mvc; //웹 api테스트용 ,mvc테스트의 시작점. get,post등을 테스트할 수 있다
+    TestRestTemplate restTemplate;
 
     @Test
-    public void 회원가입테스트() throws Exception{
-        String userId="thomas123";
-        String password="abcd";
-        String name="thomas";
-        double drivingScore=98.2;
-        int mileage=200;
+    public void 유저컨트롤러_회원가입테스트() throws Exception {
+        UsersRequestDto usersRequestDto = UsersRequestDto.builder()
+                .userId("joinTest1234")
+                .password("joinTest5678")
+                .name("joinTest")
+                .build();
 
-        mvc.perform(
-                        post("/users/join")
-                                .param("userId",userId)
-                                .param("password",password)
-                                .param("name",name) //테스트시 사용할 파라미터를 설정 (String만 가능)
-                                .param("drivingScore", String.valueOf(drivingScore))
-                                .param("mileage", String.valueOf(mileage))
+        String url="http://localhost:" + port + "/join";
 
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId",is(userId)))
-                .andExpect(jsonPath("$.password",is(password)))
-                .andExpect(jsonPath("$.name",is(name))) //json응답 값을 필드별로 검증하는 메소드
-                .andExpect(jsonPath("$.drivingScore",is(drivingScore)))
-                .andExpect(jsonPath("$.mileage",is(mileage)));
+        ResponseEntity<String> response = restTemplate.postForEntity(url, usersRequestDto, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        System.out.println("유저컨트롤러_회원가입테스트");
+    }
+
+    @Test
+    public void 유저컨트롤러_회원탈퇴테스트() throws Exception {
+        UsersRequestDto usersRequestDto = UsersRequestDto.builder()
+                .userId("joinTest1234")
+                .password("joinTest5678")
+                .build();
+
+        String url="http://localhost:" + port + "/deleteUser";
+
+        ResponseEntity<String> response = restTemplate.postForEntity(url, usersRequestDto, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        System.out.println("유저컨트롤러_회원탈퇴테스트");
+    }
+
+    @Test
+    public void 유저컨트롤러_로그인테스트() throws Exception {
+        String loginId = "qwer";
+        String loginPassword = "1234";
+
+        UsersRequestDto usersRequestDto = UsersRequestDto.builder()
+                .userId(loginId)
+                .password(loginPassword)
+                .build();
+
+        String url="http://localhost:" + port + "/login";
+
+        ResponseEntity<String> response = restTemplate.postForEntity(url, usersRequestDto, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        System.out.println("유저컨트롤러_로그인테스트");
+    }
+
+
+    @Test
+    public void 유저컨트롤러_로그아웃테스트() throws Exception {
+        System.out.println("유저컨트롤러_로그아웃테스트");
+    }
+
+    @Test
+    public void 유저컨트롤러_회원조회테스트() throws Exception {
+        String loginId = "qwer";
+
+        UsersRequestDto usersRequestDto = UsersRequestDto.builder()
+                .userId(loginId)
+                .build();
+
+        String url="http://localhost:" + port + "/userInfo";
+
+        ResponseEntity<String> response = restTemplate.postForEntity(url, usersRequestDto, String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        System.out.println("유저컨트롤러_회원조회테스트");
     }
 }

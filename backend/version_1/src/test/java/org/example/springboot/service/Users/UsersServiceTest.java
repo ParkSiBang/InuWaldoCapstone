@@ -32,7 +32,7 @@ public class UsersServiceTest extends TestCase {
 
         //given
         Users users = new Users();
-        users.setUserId("qwer");
+        users.setUserId("joinTest");
         //when
         String Id = usersService.join(users);
 
@@ -46,7 +46,6 @@ public class UsersServiceTest extends TestCase {
         //given
         Users user1 = new Users();
         user1.setUserId("qwer");
-
         Users user2 = new Users();
         user2.setUserId("qwer");
         //when
@@ -58,31 +57,34 @@ public class UsersServiceTest extends TestCase {
     }
 
     @Test
-    public void userId찾기테스트() {
+    public void 회원탈퇴테스트() {
+        Long deleteId = 32L; //삭제할 유저 ID
+        usersService.deleteUser(deleteId);
+    }
+
+    @Test
+    public void 로그인테스트() {
+        String loginId = "qwer";
+        String loginPassword = "1234";
+
+        Users loginUser = usersService.login(loginId, loginPassword);
+
+        assertThat(loginUser).isNotNull();
+    }
+
+    @Test
+    public void 유저아이디찾기테스트() {
         Users users = new Users();
-        users.setUserId("qwer");
+        users.setUserId("testId");
 
         usersService.join(users);
 
-        Users findUsersId = usersService.findByUserId("qwer").get();
+        Users findUsersId = usersService.findByUserId("testId").get();
         assertThat(findUsersId).isEqualTo(users);
     }
 
     @Test
-    public void name찾기테스트() {
-
-        Users users = new Users();
-        users.setName("tomas");
-
-        usersService.join(users);
-
-        Users findUsersName = usersService.findByName("tomas").get();
-        assertThat(findUsersName).isEqualTo(users);
-    }
-
-    @Test
     public void 전체유저찾기테스트() {
-        //given
         Users users = new Users();
         users.setUserId("한명만 가입");
 

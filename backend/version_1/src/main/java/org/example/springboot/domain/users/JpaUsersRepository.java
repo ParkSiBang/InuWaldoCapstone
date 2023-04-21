@@ -13,13 +13,13 @@ public interface JpaUsersRepository extends JpaRepository<Users, Long>, UsersRep
     Users save(Users users);
 
     @Override
+    void deleteById(Long Id);
+
+    @Override
     Optional<Users> findById(Long id);
 
     @Override
     Optional<Users> findByUserId(String userId);
-
-    @Override
-    Optional<Users> findByName(String name);
 
     @Override
     List<Users> findAll();

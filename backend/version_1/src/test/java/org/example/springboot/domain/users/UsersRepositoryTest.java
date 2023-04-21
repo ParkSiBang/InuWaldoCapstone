@@ -7,12 +7,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.transaction.Transactional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class UsersRepositoryTest extends TestCase {
     @Autowired
     UsersRepository usersRepository;
@@ -24,6 +28,7 @@ public class UsersRepositoryTest extends TestCase {
                 .name("tomas")
                 .drivingScore(10F)
                 .mileage(10L)
+                .totalDistance(10F)
                 .build());
         List<Users> usersList = usersRepository.findAll();
         Optional<Users> users = usersList.stream()

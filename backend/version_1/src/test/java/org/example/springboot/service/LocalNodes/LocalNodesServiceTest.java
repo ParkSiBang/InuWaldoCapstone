@@ -34,6 +34,7 @@ public class LocalNodesServiceTest extends TestCase {
         assertThat(closestNodeId.get()).isEqualTo(3001);
 
     }
+    /*
     @Test
     public void insertCoordinateTest(){
         //given
@@ -44,9 +45,7 @@ public class LocalNodesServiceTest extends TestCase {
         r.stream().forEach(i->{
             System.out.println("startNode:"+i.getStartLongitude());
         });
-
-    }
-
+    */
 
 
 

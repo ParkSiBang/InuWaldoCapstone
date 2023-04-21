@@ -42,16 +42,23 @@ public class Users {
 
     @Column
     private Long mileage;
-    public void setMileage(Long userId){
+    public void setMileage(Long mileage){
         this.mileage = mileage;
     }
 
+    @Column
+    private Float totalDistance;
+    public void setTotalDistance(Float totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
     @Builder
-    public Users(String userId, String password, String name, Float drivingScore, Long mileage){
+    public Users(String userId, String password, String name, Float drivingScore, Long mileage, Float totalDistance){
         this.userId=userId;
         this.password=password;
         this.name=name;
         this.drivingScore=drivingScore;
         this.mileage=mileage;
+        this.totalDistance = totalDistance;
     }
 }
