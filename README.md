@@ -377,4 +377,4 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 <br/>
 토의 내용<br>
 1. 프론트 개별적으로 개발한 내용 연동
-2. 발펴 준비
+2. 발표 준비
