@@ -88,6 +88,10 @@ const Signin = ({navigation}) => {
                     containerStyle={{ marginTop: 0, backgroundColor: 'transparent' }}
                     textStyle={{ color: theme.btnTextLink, fontSize: 18 }}
                 />
+                <Button 
+                    title="test button to profile" 
+                    onPress={() => navigation.navigate('Profile')}
+                />
             </Container>
         </KeyboardAwareScrollView>
     );
