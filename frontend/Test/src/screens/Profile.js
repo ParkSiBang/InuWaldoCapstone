@@ -16,13 +16,16 @@ const Text_Welcome = styled.Text`
     margin-bottom: 50px;
 `;
 
-const App = () => {
+const Profile = ({navigation}) => {
     return (
-    <Container>
-        <Text_Welcome>환영합니다</Text_Welcome>
-        <Button title='시작하기'></Button>
-    </Container>
+        <Container>
+            <Text_Welcome>환영합니다</Text_Welcome>
+            <Button
+                title="start"
+                onPress={() => navigation.navigate('Map')}
+            />
+        </Container>
     );
 };
 
-export default App;
+export default Profile;
