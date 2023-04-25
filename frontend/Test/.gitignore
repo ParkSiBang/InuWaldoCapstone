@@ -64,3 +64,6 @@ yarn-error.log
 
 #firebase
 firebase.json
+
+#env.local
+.env.local
