@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import { ThemeContext } from "styled-components/native";
 import {createStackNavigator} from '@react-navigation/stack';
-import { Signin, Signup, Profile, Map } from '../screens';
+import { Signin, Signup, Profile, Map, MapResult } from '../screens';
 
 
 {/*
@@ -43,6 +43,10 @@ const Auth = () => {
             <Stack.Screen 
                 name="Map" 
                 component={Map}  
+            />
+            <Stack.Screen 
+                name="MapResult" 
+                component={MapResult}  
             />
         </Stack.Navigator>
     );

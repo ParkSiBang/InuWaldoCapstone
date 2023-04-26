@@ -26,7 +26,7 @@ const Button = ({ title, onPress, containerStyle, textStyle }) => {
             style={{ flexDirection: 'row' }}
         >
             <Container style={containerStyle}>
-                <Title style={textStyle}>
+                <Title style={textStyle} >
                     {title}
                 </Title>
             </Container>
