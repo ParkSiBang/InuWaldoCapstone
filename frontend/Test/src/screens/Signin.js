@@ -1,11 +1,11 @@
 import React, { useContext, useState, useRef } from 'react';
 import { ThemeContext } from 'styled-components/native';
 import styled from 'styled-components/native';
-import { Button, Image, Input } from '../components';
+import { Button, Input } from '../components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { signin } from '../firebase';
-import { Alert } from 'react-native';
+import { Alert, Image } from 'react-native';
 import { validateEmail, removeWhitespace } from '../utils';
 
 // 로그인 화면
@@ -60,6 +60,8 @@ const Signin = ({navigation}) => {
             contentContainerStyle={{ flex: 1 }} 
         >
             <Container insets={insets}>
+                <Image
+                    source={require('Test/assets/images/icon.jpg')}/>
                 <Input
                     label="Email"
                     placeholder="Email"
@@ -88,10 +90,10 @@ const Signin = ({navigation}) => {
                     containerStyle={{ marginTop: 0, backgroundColor: 'transparent' }}
                     textStyle={{ color: theme.btnTextLink, fontSize: 18 }}
                 />
-                <Button 
+                {/* <Button 
                     title="test button to profile" 
                     onPress={() => navigation.navigate('Profile')}
-                />
+                /> */}
             </Container>
         </KeyboardAwareScrollView>
     );

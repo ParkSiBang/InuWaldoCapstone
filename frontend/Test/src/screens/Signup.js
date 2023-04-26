@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components/native';
-import { Button, Image, Input } from '../components';
+import { Button, Input } from '../components';
+import {Image} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 {/*
@@ -37,6 +38,8 @@ const Signup = () => {
     return (
         <KeyboardAwareScrollView extraScrollHeight={20}>
             <Container>
+                <Image
+                    source={require('Test/assets/images/face.jpg')}/>
                 <Input
                     label="Name"
                     placeholder="Name"

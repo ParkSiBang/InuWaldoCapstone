@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, Text, Button } from 'react-native';
+import { StatusBar, Text, Button, Image } from 'react-native';
 import styled from 'styled-components/native';
 
 const Container = styled.View`
@@ -13,12 +13,15 @@ const Container = styled.View`
 const Text_Welcome = styled.Text`
     font-size: 50px;
     font-weight: 600;
+    margin-top: 50px;
     margin-bottom: 50px;
 `;
 
 const Profile = ({navigation}) => {
     return (
         <Container>
+            <Image
+                source={require('Test/assets/images/face.jpg')}/>
             <Text_Welcome>환영합니다</Text_Welcome>
             <Button
                 title="start"
