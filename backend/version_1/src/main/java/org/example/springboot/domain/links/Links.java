@@ -15,6 +15,7 @@ public class Links {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column
     private Integer startNode;
 
