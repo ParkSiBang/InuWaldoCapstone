@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text,Image, StyleSheet, TouchableOpacity, Platform, PermissionsAndroid, Dimensions} from 'react-native';
+import {View, Text,ImageBackground, StyleSheet, TouchableOpacity, Platform, PermissionsAndroid, Dimensions} from 'react-native';
 import MapView, {Marker, Polyline, AnimatedRegion, MarkerAnimated, Overlay} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { Button } from './components';
 import axios from 'axios';
+import warningImage from '../../assets/images/warning.jpg'
 const {width, height} = Dimensions.get('screen');
 import { 
     accelerometer,
@@ -20,13 +21,14 @@ let sharpHighSpeedNum = 3;  // 급과속
 let accidentNum = 1;        // 사고 횟수
 
 export default function Map({navigation}) {
-    const [region, setRegion] = useState(null); 
     const [now,setNow] =useState(null);
     const [destination, setDestination] = useState(null); //목적지 좌표
     const [accData,setAccData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0}); //가속센서 데이터
-    const [gyroData,setGyroData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0}); //방향센서 데이터
+    const [gyroTimeStamp,setGyroTimeStamp]=useState(null); //방향센서 데이터
     const [accMessage,setAccMessage]=useState(false); //급가속 경고 메시지 on off
     const [gyroMessage,setGyroMessage]=useState(false); //급커브 경고 메시지 on off
+    const [speedMessage,setSpeedMessage]=useState(false); //과속 경고 메시지 on off
+    const [accidentMessage,setAccidentMessage]=useState(false); //과속 경고 메시지 on off
     const [coordinates, setCoordinates] = useState([]); //이동경로
     const [distance, setDistance] = useState(null); //이동거리
     const [speed,setSpeed]=useState(0);
@@ -37,9 +39,14 @@ export default function Map({navigation}) {
 
     setUpdateIntervalForType(SensorTypes.accelerometer, 500); // defaults to 100ms
     setUpdateIntervalForType(SensorTypes.gyroscope, 500); // defaults to 100ms
+
+    //가속
     let px=0;
     let py=0;
-    let pz=9.8;
+    let pz=9.8; 
+    let previousTimestamp = 0; // 이전 측정 시간
+    
+
     let subscription = null; //가속
     let subscription2 = null; //자이로
     
@@ -60,8 +67,14 @@ export default function Map({navigation}) {
                 const timeDiff = timestamp-prevTimestamp
                 const nowSpeed= (newDistance/timeDiff)*3600000; //km/hr
                 if(prevTimestamp){
+                    if(nowSpeed>30) {
+                        setSpeedMessage(true);
+                        console.log("과속 감지!")
+                    }
                     
+
                     setSpeed(nowSpeed);
+                    
                 }
                 
                 setDistance(distance + newDistance);
@@ -94,7 +107,16 @@ export default function Map({navigation}) {
         if(naviMode.accCheckMode){
             subscription = accelerometer.subscribe(({ x, y, z, timestamp }) =>
                 {
-                    if(Math.sqrt(px*px+py*py+pz*pz)+2 < Math.sqrt(x*x+y*y+z*z)) setAccMessage(true); //2m/ss 이상 가속시 경고
+                    const prevAcc = Math.sqrt(px*px+py*py+pz*pz)
+                    const nowAcc = Math.sqrt(x*x+y*y+z*z)
+                    if(prevAcc+2 < nowAcc && prevAcc + 8 > nowAcc ) {
+                        setAccMessage(true); //2m/ss 이상 가속시 경고
+                        console.log('급가속 감지!: '+ (prevAcc-nowAcc));
+                    }else if(prevAcc + 8 <= nowAcc){
+                        setAccidentMessage(true); //2m/ss 이상 가속시 경고
+                        console.log('사고 감지!(급가속): '+ (prevAcc-nowAcc));
+
+                    }
                     px=x;
                     py=y;
                     pz=z;
@@ -104,31 +126,40 @@ export default function Map({navigation}) {
         if(naviMode.gyroCheckMode){
             subscription = gyroscope.subscribe(({ x, y, z, timestamp }) =>
                 {
-                    setGyroData({x:x,y:y,z:z});
+                    const dt = (timestamp - previousTimestamp) / 1000; // 시간 변화량 (s)
+                    const dz = z * dt; // x 축 회전 각도 변화량 (rad)
+                    const rotate = Math.abs(dz) / dt * (180 / Math.PI);
+                    if (dt && rotate > 120 && rotate < 240) {
+                        setGyroMessage(true);
+                        console.log('급커브 감지!: '+rotate);
+                    }else if(rotate >= 240){
+                        setAccidentMessage(true);
+                        console.log('사고 감지!(급커브): '+rotate);
+                    }
+                    previousTimestamp = timestamp;
+
                 });
         }
 
     },[naviMode])
-    
-    const geoLocation = () => {
-        Geolocation.getCurrentPosition(
-            position => {
-                const { latitude, longitude, timestamp } = position.coords;
-                
-                console.log('LAT: ', position.coords.latitude);
-                console.log('LONG: ', position.coords.longitude);
-                setNow({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.latitude,
-                    
-                })
-                
+    const [initialRegion, setInitialRegion] = useState(null);
 
-            },
-            error => { console.log(error.code, error.message); },
-            //{enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
-        )
-    }
+    useEffect(() => {
+      Geolocation.getCurrentPosition(
+        position => {
+          const { latitude, longitude } = position.coords;
+          setInitialRegion({
+            latitude,
+            longitude,
+            latitudeDelta: 0.0166,
+            longitudeDelta: 0.0010,
+          });
+        },
+        error => console.log(error),
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      );
+    }, []);
+    
     const postNodes = async () => { //경로 받아오기
         if(destination == null || now == null){
             console.log("좌표설정이 안되어있습니다.")
@@ -176,70 +207,52 @@ export default function Map({navigation}) {
 
         setDestination(data);
         
+    } 
+    if (!initialRegion) {
+        return (
+          <View>
+            <Text>Splash Screen</Text>
+          </View>
+        );
     }
-
 
 
     return (
         <View style={styles.container}>
-            
-            <View style={styles.interface}>
+             {gyroMessage? 
+                    <TouchableOpacity
+                        onPress={()=>setGyroMessage(false)}
+                        style={styles.warning}
+                        >
+                        <Text style={styles.warningText}>급커브 경고</Text>
+                    </TouchableOpacity>: null
+                }
+                {speedMessage? 
+                    <TouchableOpacity
+                        onPress={()=>setSpeedMessage(false)}
+                        style={styles.warning}
+                        >
+                        <Text style={styles.warningText}>과속 경고</Text>
+                    </TouchableOpacity>: null
+                }
                 {accMessage? 
                     <TouchableOpacity
                         onPress={()=>setAccMessage(false)}
                         style={styles.warning}
                         >
                         <Text style={styles.warningText}>급가속 경고</Text>
+                        
                     </TouchableOpacity>: null
                 }
-                <View style={styles.states}>
-                    <Text style={styles.text}>가속도: {Math.sqrt(accData.x*accData.x+accData.y*accData.y+accData.z*accData.z) - 9.8 }</Text>
-                    <Text style={styles.text}>속도: {speed} </Text>
-                    <Text style={styles.text}>방향: {gyroData.x}, {gyroData.y}, {gyroData.z} </Text>
-                    <Text style={styles.text}>이동거리: {distance} </Text>
-                </View>
-
-                <View style={styles.buttons}>
-                    {/*<Button title="경로안내" onPress={postNodes} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}></Button>
-                    <Button title="급가속체크" onPress={()=>{
-                        if(accCheckMode){
-                            setAccCheckmode(false)
-                        }else{
-                            setAccCheckmode(true)
-                        }
-                        }} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}>
-                    </Button>
-                    <Button title="방향체크" onPress={()=>{
-                        if(accCheckMode){
-                            setGyroCheckMode(false)
-                        }else{
-                            setGyroCheckMode(true)
-                        }
-                        }} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}>
-                    </Button>*/}
+                {accidentMessage? 
                     <TouchableOpacity
-                        onPress={postNodes}
-                        style={styles.buttonContainer}
-                    >
-                        <Text style={styles.buttonText}>경로안내</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                        onPress={()=>setAccidentMessage(false)}
+                        style={[styles.warning,{backgroundColor:"#FF6D60"}]}
+                        >
+                        <Text style={styles.warningText}>사고 감지</Text>
                         
-                        style={styles.buttonContainer}
-                    >
-                        <Text 
-                            style={styles.buttonText}
-                            onPress={() => navigation.navigate('MapResult')}
-                        >안내종료</Text>
-                    </TouchableOpacity>
-                    
-
-                </View>
-                
-                
-
-            </View>
-            
+                    </TouchableOpacity>: null
+                }
             <MapView
                 onMapReady={() => {
                     Platform.OS === 'android' ?
@@ -250,8 +263,9 @@ export default function Map({navigation}) {
                         })
                     : ''
                 }}
-                style={{width: width, height: height}}
-                region={region}
+                style={styles.mapContainer}
+                initialRegion={initialRegion}
+                followsUserLocation={true}
                 zoomEnabled={true}
                 minZoomLevel={10}  // 클수록 조금밖에 축소안됨
                 showsUserLocation={true}
@@ -279,6 +293,53 @@ export default function Map({navigation}) {
             
             </MapView>
             
+            <View style={[styles.interface,{backgroundColor:'#6478FF'}]}>
+               
+                <View style={[styles.buttons,{backgroundColor:'#E8F5FF',borderColor:'#96A5FF'}]}>
+                    {/*<Button title="경로안내" onPress={postNodes} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}></Button>
+                    <Button title="급가속체크" onPress={()=>{
+                        if(accCheckMode){
+                            setAccCheckmode(false)
+                        }else{
+                            setAccCheckmode(true)
+                        }
+                        }} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}>
+                    </Button>
+                    <Button title="방향체크" onPress={()=>{
+                        if(accCheckMode){
+                            setGyroCheckMode(false)
+                        }else{
+                            setGyroCheckMode(true)
+                        }
+                        }} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}>
+                    </Button>*/}
+                    <View style={[styles.speedStyle,{borderWidth:3}]}>
+                        <Text style={[styles.buttonText,{fontSize:30,textAlign:'center'}]}>{speed}</Text>
+                    </View>
+                    <TouchableOpacity
+                        onPress={postNodes}
+                        style={[styles.buttonContainer,{backgroundColor:'#8282FF',borderColor:'#6E6ED7' }]}
+                    >
+                        <Text style={styles.buttonText}>경로안내</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+
+                        style={[styles.buttonContainer,{backgroundColor:'#FF5A5A',borderColor:'#EB4646'},]}
+
+                    >
+                        <Text 
+                            style={[styles.buttonText]}
+                            onPress={() => navigation.navigate('MapResult')}
+                        >안내종료</Text>
+                    </TouchableOpacity>
+                </View>
+                
+                
+
+            </View>
+            
+            
+            
         </View>
         
     );
@@ -290,38 +351,43 @@ const styles = StyleSheet.create({
         margin:5,
         alignItems: 'center',
         backgroundColor:"white",
-        
-        
+
     },
+    mapContainer: {
+        width: '100%',
+        height: '90%',
+        
+      },
     warning:{
         position:"absolute",
-        left: "50%",
+        left: "20%",
         marginLeft:-50,
         zIndex:3,
-        width:100,
+        width:130,
         height:100,
         justifyContent:"center",
-        backgroundColor: "orange",
-        borderColor:"black",
-        borderWidth:3,
+        backgroundColor: "#FFD95A",
+        borderColor:"#4C3D3D",
+        borderBottomWidth:15,
+        borderTopWidth:15,
+        borderWidth:2,
+        borderRadius:5
+        
     },
     warningText:{
         color:"black",
+        left: "20%",
+        marginLeft:-15,
+        zIndex:3,
         fontSize:20
     },
+    
     interface:{
         display:"flex",
         flexDirection:"column",
-        margin:10,
-        padding:10,
-        height: 200,
-        width:400,
-        borderRadius:30,
-        border:"solid",
-        backgroundColor:"white",
-        borderColor:"black",
-        borderWidth:3,
-        
+        justifyContent:"center",
+        height: '10%',
+        width:'100%'
     },
     text:{
         color:"black",
@@ -350,20 +416,31 @@ const styles = StyleSheet.create({
         borderWidth:3,
         
     },
+    speedStyle:{
+        width:50,
+        height:50,
+        display:"flex",
+        marginHorizontal:30,
+        backgroundColor:"white",
+        borderRadius:50,
+        borderColor:"black",
+        borderWidth:2,
+
+    },
     buttonText:{
         color:"black",
         fontSize:15
     },
     buttonContainer:{
         display:"flex",
-        marginHorizontal:30,
         padding:10,
-        
         backgroundColor:"white",
+        marginHorizontal:5,
         borderRadius:10,
         borderColor:"black",
         borderWidth:2,
     }
+    
 })
 
 export { drivingDistance, speedingNum, sharpLowSpeedNum, sharpHighSpeedNum, accidentNum }
