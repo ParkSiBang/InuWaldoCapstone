@@ -46,7 +46,17 @@ const MapResult = ({navigation}) => {
     return (
         <Container>
             <Text_Welcome>안내종료</Text_Welcome>
-            <Card>
+
+            {/* 마일리지 정산 카드 */}
+
+            <Card
+                containerStyle={{
+                    backgroundColor:'#F2F2F2'
+            }}
+            >
+
+                {/* 최종 결과 */}
+
                 <View style={{flexDirection: 'row',}}>
                     <View>
                         <Text_Normal>운전거리  : </Text_Normal>
@@ -63,34 +73,26 @@ const MapResult = ({navigation}) => {
                         </Text_Normal>
                     </View>
                 </View>
-                <View
-                    style={{
-                        marginTop: 10,
-                        marginBottom: 10,
-                        borderBottomColor: 'black',
-                        borderBottomWidth: 1,
-                    }}
-                />
+                <View style={{ marginTop: 10, marginBottom: 10, borderBottomColor: 'black', borderBottomWidth: 1,}}/>
+
+                {/* 마일리지 계산 */}
+
                 <View style={{flexDirection: 'row',}}>
                 <View>
                     <Text_Normal >마일리지  : </Text_Normal>
                 </View>
-                <View>
-                    <Text_Normal >   +{drivingDistance*100}</Text_Normal>
-                    <Text_Normal>   {speedingNum && '-'+speedingNum*100}</Text_Normal>
-                    <Text_Normal>   {sharpLowSpeedNum && '-'+sharpLowSpeedNum*10}</Text_Normal>
-                    <Text_Normal>   {sharpHighSpeedNum && '-'+sharpHighSpeedNum*10}</Text_Normal>
-                    <Text_Normal>   {accidentNum && '-'+accidentNum*10}</Text_Normal>
+                    <View>
+                        <Text_Normal >   +{drivingDistance*100}</Text_Normal>
+                        <Text_Normal>   {speedingNum && '-'+speedingNum*100}</Text_Normal>
+                        <Text_Normal>   {sharpLowSpeedNum && '-'+sharpLowSpeedNum*10}</Text_Normal>
+                        <Text_Normal>   {sharpHighSpeedNum && '-'+sharpHighSpeedNum*10}</Text_Normal>
+                        <Text_Normal>   {accidentNum && '-'+accidentNum*10}</Text_Normal>
+                    </View>
                 </View>
-                </View>
-                <View
-                    style={{
-                        marginTop: 10,
-                        marginBottom: 10,
-                        borderBottomColor: 'black',
-                        borderBottomWidth: 1,
-                    }}
-                />
+                <View style={{ marginTop: 10, marginBottom: 10, borderBottomColor: 'black', borderBottomWidth: 1,}}/>
+
+                {/* 최종 마일리지 값 */}
+                
                 <Text_Normal>                      {ResultMile > 0 ? '+'+ResultMile : null}</Text_Normal>
                 <View style={{ marginTop: 20,  marginRight: 100, marginLeft: 100}}>
                     <Button 
