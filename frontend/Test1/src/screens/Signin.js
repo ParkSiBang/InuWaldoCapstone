@@ -94,6 +94,10 @@ const Signin = ({navigation}) => {
                     title="test button to profile" 
                     onPress={() => navigation.navigate('Profile')}
                 />
+                <Button 
+                    title="test button to UserPage" 
+                    onPress={() => navigation.navigate('UserPage')}
+                />
             </Container>
         </KeyboardAwareScrollView>
     );

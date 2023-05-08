@@ -231,6 +231,7 @@ export default function Map({navigation}) {
                             style={styles.buttonText}
                             onPress={() => navigation.navigate('MapResult')}
                         >안내종료</Text>
+                        
                     </TouchableOpacity>
                     
 
