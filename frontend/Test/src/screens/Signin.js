@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import { Button, Input } from '../components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-//import { signin } from '../firebase';
+import { signin } from '../firebase';
 import { Alert, Image } from 'react-native';
 import { validateEmail, removeWhitespace } from '../utils';
 
@@ -60,7 +60,7 @@ const Signin = ({navigation}) => {
             contentContainerStyle={{ flex: 1 }} 
         >
             <Container insets={insets}>
-                {/*<Image
+                <Image
                     source={require('Test/assets/images/icon.jpg')}/>
                 <Input
                     label="Email"
@@ -89,11 +89,15 @@ const Signin = ({navigation}) => {
                     onPress={() => navigation.navigate('Signup')}
                     containerStyle={{ marginTop: 0, backgroundColor: 'transparent' }}
                     textStyle={{ color: theme.btnTextLink, fontSize: 18 }}
-                />*/}
-                { <Button 
+                />
+                <Button 
                     title="test button to profile" 
                     onPress={() => navigation.navigate('Profile')}
-                /> }
+                />
+                <Button 
+                    title="test button to UserPage" 
+                    onPress={() => navigation.navigate('UserPage')}
+                />
             </Container>
         </KeyboardAwareScrollView>
     );

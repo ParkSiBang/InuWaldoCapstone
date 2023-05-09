@@ -1,13 +1,15 @@
 import React from 'react';
-import { StatusBar, Text, Button, Image } from 'react-native';
+import { StatusBar, View, Text, Image } from 'react-native';
+import {Signup, profileName} from './Signup'
 import styled from 'styled-components/native';
+import { Button } from '../components';
 
 const Container = styled.View`
     flex: 1;
     justify-content: center;
     align-items: center;
     background-color: ${({ theme }) => theme.background};
-    padding: 0 20px;
+    padding: 10px 20px;
 `;
 
 const Text_Welcome = styled.Text`
@@ -23,10 +25,20 @@ const Profile = ({navigation}) => {
             <Image
                 source={require('Test/assets/images/face.jpg')}/>
             <Text_Welcome>환영합니다</Text_Welcome>
-            <Button
-                title="start"
-                onPress={() => navigation.navigate('Map')}
-            />
+            <View
+                style={{ width: 100, }}
+            >
+                <Button
+                    title="자율 주행"
+                    onPress={() => navigation.navigate('Map')}
+                    textStyle={{fontSize: 18,}}
+                />
+                <Button
+                    title="길 찾기"
+                    onPress={() => navigation.navigate('Map')}
+                    textStyle={{fontSize: 18,}}
+                />
+            </View>
         </Container>
     );
 };

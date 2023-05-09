@@ -4,7 +4,6 @@ import MapView, {Marker, Polyline, AnimatedRegion, MarkerAnimated, Overlay} from
 import Geolocation from '@react-native-community/geolocation';
 import { Button } from './components';
 import axios from 'axios';
-import warningImage from '../../assets/images/warning.jpg'
 const {width, height} = Dimensions.get('screen');
 import { 
     accelerometer,
@@ -208,13 +207,13 @@ export default function Map({navigation}) {
         setDestination(data);
         
     } 
-    if (!initialRegion) {
-        return (
-          <View>
-            <Text>Splash Screen</Text>
-          </View>
-        );
-    }
+    // if (!initialRegion) {
+    //     return (
+    //       <View>
+    //         <Text>Splash Screen</Text>
+    //       </View>
+    //     );
+    // }
 
 
     return (

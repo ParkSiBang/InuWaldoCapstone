@@ -8,7 +8,8 @@ const App = () => {
     return (
     <ThemeProvider theme={theme}>
         <StatusBar backgroundColor={theme.background} barStyle="dark-content" />
-        <Navigation />
+        <Navigation/>
+
     </ThemeProvider>
     );
 };

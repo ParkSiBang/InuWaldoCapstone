@@ -4,6 +4,7 @@ import { Button, Input } from '../components';
 import {Image} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+
 {/*
     회원 가입 화면
     extraScrollHeight : 자판과 input 부분 거리 설정
@@ -20,8 +21,7 @@ const Container = styled.View`
     padding: 50px 20px;
 `;
 
-const Signup = () => {
-
+export const Signup = () => {
     // 갤러리에서 불러온 사진 정보
     const [name, setName] = useState('');    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

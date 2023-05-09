@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 public class UsersRepositoryTest extends TestCase {
     @Autowired
     UsersRepository usersRepository;

@@ -1,10 +1,13 @@
 import React from 'react';
-import { StatusBar, Text, Button, View } from 'react-native';
+import { StatusBar, Text, View } from 'react-native';
+import { Button } from '../components';
 import styled from 'styled-components/native';
 import { drivingDistance, speedingNum, sharpLowSpeedNum, sharpHighSpeedNum, accidentNum } from './Map';
+import { Card } from '@rneui/themed';
 
 const Container = styled.View`
     flex: 1;
+    font-weight: bold;
     justify-content: center;
     //align-items: center;
     background-color: ${({ theme }) => theme.background};
@@ -19,6 +22,11 @@ const Text_Welcome = styled.Text`
     font-weight: 600;
     margin-bottom: 50px;
 `;
+
+const Text_Normal = styled.Text`
+    font-size : 14px;
+    font-weight: bold;
+`
 
 const MapResult = ({navigation}) => {
     // 어떤 것을 위반했는지 알려주는 함수
@@ -37,38 +45,63 @@ const MapResult = ({navigation}) => {
     let ResultMile = speedingNum*100 - sharpLowSpeedNum*10 - sharpHighSpeedNum*10 - accidentNum*10
     return (
         <Container>
-        <Text_Welcome>안내종료</Text_Welcome>
-        <Text style={{fontWeight: "bold"}}>운전거리  :  {drivingDistance}km</Text>
-        <Text style={{fontWeight: "bold"}}>위반사항  :  {speedingNum && '과속('+speedingNum+'km)'}  
-                               {sharpLowSpeedNum && '  급감속('+sharpLowSpeedNum+')'}  
-                               {sharpHighSpeedNum && '  급가속('+sharpHighSpeedNum+')'}  
-                               {accidentNum && '  사고('+accidentNum+')'}
-            </Text>
-            <View
-                style={{
-                    marginTop: 10,
-                    marginBottom: 10,
-                    borderBottomColor: 'black',
-                    borderBottomWidth: 1,
-                }}
-            />
-            <Text style={{fontWeight: "bold"}}>마일리지  :  +{drivingDistance*100}</Text>
-            <Text style={{fontWeight: "bold"}}>                    {speedingNum && '-'+speedingNum*100}</Text>
-            <Text style={{fontWeight: "bold"}}>                    {sharpLowSpeedNum && '-'+sharpLowSpeedNum*10}</Text>
-            <Text style={{fontWeight: "bold"}}>                    {sharpHighSpeedNum && '-'+sharpHighSpeedNum*10}</Text>
-            <Text style={{fontWeight: "bold"}}>                    {accidentNum && '-'+accidentNum*10}</Text>
-            <View
-                style={{
-                    marginTop: 10,
-                    marginBottom: 10,
-                    borderBottomColor: 'black',
-                    borderBottomWidth: 1,
-                }}
-            />
-            <Text style={{fontWeight: "bold"}}>                     {ResultMile > 0 ? '+'+ResultMile : null}</Text>
-            <View style={{ marginTop: 40,  marginRight: 100, marginLeft: 100}}>
-                <Button title="적립" onPress={() => navigation.navigate('Map')}/>
-            </View>
+            <Text_Welcome>안내종료</Text_Welcome>
+
+            {/* 마일리지 정산 카드 */}
+
+            <Card
+                containerStyle={{
+                    backgroundColor:'#F2F2F2'
+            }}
+            >
+
+                {/* 최종 결과 */}
+
+                <View style={{flexDirection: 'row',}}>
+                    <View>
+                        <Text_Normal>운전거리  : </Text_Normal>
+                        <Text_Normal>위반사항  : </Text_Normal>
+                    </View>
+                    <View>
+                        <Text_Normal>  {drivingDistance}km </Text_Normal>
+                        <Text_Normal>  {speedingNum && '과속('+speedingNum+'km)'}  
+                                {sharpLowSpeedNum && '  급감속('+sharpLowSpeedNum+')'}  
+                        </Text_Normal>
+                        <Text_Normal>
+                            {sharpHighSpeedNum && '  급가속('+sharpHighSpeedNum+')'}  
+                            {accidentNum && '  사고('+accidentNum+')'}
+                        </Text_Normal>
+                    </View>
+                </View>
+                <View style={{ marginTop: 10, marginBottom: 10, borderBottomColor: 'black', borderBottomWidth: 1,}}/>
+
+                {/* 마일리지 계산 */}
+
+                <View style={{flexDirection: 'row',}}>
+                <View>
+                    <Text_Normal >마일리지  : </Text_Normal>
+                </View>
+                    <View>
+                        <Text_Normal >   +{drivingDistance*100}</Text_Normal>
+                        <Text_Normal>   {speedingNum && '-'+speedingNum*100}</Text_Normal>
+                        <Text_Normal>   {sharpLowSpeedNum && '-'+sharpLowSpeedNum*10}</Text_Normal>
+                        <Text_Normal>   {sharpHighSpeedNum && '-'+sharpHighSpeedNum*10}</Text_Normal>
+                        <Text_Normal>   {accidentNum && '-'+accidentNum*10}</Text_Normal>
+                    </View>
+                </View>
+                <View style={{ marginTop: 10, marginBottom: 10, borderBottomColor: 'black', borderBottomWidth: 1,}}/>
+
+                {/* 최종 마일리지 값 */}
+                
+                <Text_Normal>                      {ResultMile > 0 ? '+'+ResultMile : null}</Text_Normal>
+                <View style={{ marginTop: 20,  marginRight: 100, marginLeft: 100}}>
+                    <Button 
+                        title="적립" 
+                        onPress={() => navigation.navigate('Map')}
+                        textStyle={{fontSize: 18,}}
+                    />
+                </View>
+            </Card>
         </Container>
     );
 };
