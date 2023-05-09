@@ -1,7 +1,7 @@
 import React, {useContext} from "react";
 import { ThemeContext } from "styled-components/native";
 import {createStackNavigator} from '@react-navigation/stack';
-import { Signin, Signup, Profile, Map, MapResult, UserPage, RecentRecord } from '../screens';
+import { Signin, Signup, Profile, Map, MapResult, UserPage, RecentRecord, FreeMap } from '../screens';
 
 
 {/*
@@ -21,7 +21,7 @@ const Auth = () => {
         <Stack.Navigator screenOptions={{
             cardStyle: { backgroundColor : theme.background},
         }}>
-            <Stack.Screen 
+            {/* <Stack.Screen 
                 name="Signin" 
                 component={Signin} 
                 options={{headerShown: false}} 
@@ -35,7 +35,7 @@ const Auth = () => {
                     headerTintColor: theme.text,
                     
                 }}
-            />
+            /> */}
             <Stack.Screen 
                 name="Profile" 
                 component={Profile}  
@@ -55,6 +55,10 @@ const Auth = () => {
             <Stack.Screen 
                 name="RecentRecord" 
                 component={RecentRecord}  
+            />
+            <Stack.Screen
+                name="FreeMap"
+                component={FreeMap}
             />
         </Stack.Navigator>
     );

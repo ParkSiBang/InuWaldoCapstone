@@ -30,7 +30,7 @@ const Profile = ({navigation}) => {
             >
                 <Button
                     title="자율 주행"
-                    onPress={() => navigation.navigate('Map')}
+                    onPress={() => navigation.navigate('FreeMap')}
                     textStyle={{fontSize: 18,}}
                 />
                 <Button

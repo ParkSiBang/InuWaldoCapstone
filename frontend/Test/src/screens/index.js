@@ -5,5 +5,6 @@ import Map from './Map';
 import MapResult from './MapResult';
 import UserPage from './UserPage';
 import RecentRecord from './RecentRecord';
+import FreeMap from './FreeMap';
 
-export { Signin, Signup, Profile, Map, MapResult, UserPage, RecentRecord };
+export { Signin, Signup, Profile, Map, MapResult, UserPage, RecentRecord, FreeMap };
