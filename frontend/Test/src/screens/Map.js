@@ -67,8 +67,8 @@ export default function Map({navigation}) {
                 const nowSpeed= (newDistance/timeDiff)*3600000; //km/hr
                 if(prevTimestamp){
                     if(nowSpeed>30) {
-                        setSpeedMessage(true);
-                        console.log("과속 감지!")
+                        //setSpeedMessage(true);
+                        //console.log("과속 감지!")
                     }
                     
 
@@ -89,7 +89,7 @@ export default function Map({navigation}) {
             console.log(error);
           },
           {
-            enableHighAccuracy: true,
+            //enableHighAccuracy: true,
             distanceFilter: 10,
             interval: 1000,
             fastestInterval: 1000
@@ -147,24 +147,31 @@ export default function Map({navigation}) {
       Geolocation.getCurrentPosition(
         position => {
           const { latitude, longitude } = position.coords;
+          console.log(longitude)
+          console.log(latitude)
+          setNow({latitude: latitude, longitude:longitude});
           setInitialRegion({
-            latitude,
-            longitude,
+            latitude: latitude,
+            longitude: longitude,
             latitudeDelta: 0.0166,
             longitudeDelta: 0.0010,
           });
         },
         error => console.log(error),
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        { //enableHighAccuracy: true, 
+            timeout: 20000, 
+            maximumAge: 1000 }
       );
     }, []);
     
     const postNodes = async () => { //경로 받아오기
         if(destination == null || now == null){
+            console.log(now)
+            console.log(destination)
             console.log("좌표설정이 안되어있습니다.")
         }else{
             try {
-                const response = await axios.post('http://192.168.55.240:8080/path', {
+                const response = await axios.post('http://192.168.35.227:8080/path', {
                    startLatitude: `${now.latitude}`,
                    startLongitude: `${now.longitude}`,
                    destLatitude: `${destination.coords.latitude}`,
