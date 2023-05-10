@@ -11,6 +11,15 @@ import { drivingDistance, speedingNum, sharpLowSpeedNum, sharpHighSpeedNum, acci
 
 const Tab = createBottomTabNavigator();
 
+
+
+const Text_Welcome = styled.Text`
+    font-size: 50px;
+    font-weight: 600;
+    margin-top: 50px;
+    margin-bottom: 50px;
+`;
+
 const UserPage = ({navigation}) => {
     return (
         <View style={{flex:1}}>

@@ -21,7 +21,7 @@ const Auth = () => {
         <Stack.Navigator screenOptions={{
             cardStyle: { backgroundColor : theme.background},
         }}>
-            <Stack.Screen 
+            {/* <Stack.Screen 
                 name="Signin" 
                 component={Signin} 
                 options={{headerShown: false}} 
@@ -35,7 +35,7 @@ const Auth = () => {
                     headerTintColor: theme.text,
                     
                 }}
-            />
+            /> */}
             <Stack.Screen 
                 name="Profile" 
                 component={Profile}  

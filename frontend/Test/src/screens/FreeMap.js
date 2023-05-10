@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text,ImageBackground, StyleSheet, TouchableOpacity, Platform, PermissionsAndroid, Dimensions} from 'react-native';
 import MapView, {Marker, Polyline, AnimatedRegion, MarkerAnimated, Overlay} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { Button } from './components';
+import { Divider, Button } from '@rneui/themed';
 import axios from 'axios';
 const {width, height} = Dimensions.get('screen');
 import { 
@@ -299,49 +299,95 @@ export default function FreeMap({navigation}) {
             
             </MapView>
             
-            <View style={[styles.interface,{backgroundColor:'#6478FF'}]}>
-               
-                <View style={[styles.buttons,{backgroundColor:'#E8F5FF',borderColor:'#96A5FF'}]}>
-                    {/*<Button title="경로안내" onPress={postNodes} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}></Button>
-                    <Button title="급가속체크" onPress={()=>{
-                        if(accCheckMode){
-                            setAccCheckmode(false)
-                        }else{
-                            setAccCheckmode(true)
-                        }
-                        }} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}>
-                    </Button>
-                    <Button title="방향체크" onPress={()=>{
-                        if(accCheckMode){
-                            setGyroCheckMode(false)
-                        }else{
-                            setGyroCheckMode(true)
-                        }
-                        }} textStyle={styles.buttonText} containerStyle={styles.buttonContainer}>
-                    </Button>*/}
-                    <View style={[styles.speedStyle,{borderWidth:3}]}>
-                        <Text style={[styles.buttonText,{fontSize:30,textAlign:'center'}]}>{speed}</Text>
+            {/* 속도와 button 상태창 */}
+
+           <View 
+                style={{
+                    flex: 1,
+                    backgroundColor: '#0080FF',
+                    margin: 0,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                    borderRadius: 2,
+                }}
+            >
+
+                {/* 속도창 */}
+                
+
+                <View
+                    style={{
+                        flex: 2,
+                        //backgroundColor: 'green',
+                        margin: 0,
+                        //alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'row',
+                    }}
+                >
+                    <Text style={{
+                        color: 'white',
+                        //backgroundColor: 'orange',
+                        fontSize: 35,
+
+                        fontWeight: 600,
+                    }}> 
+                        23
+                    </Text>
+                    <View
+                        style={{
+                            justifyContent: 'flex-end',
+                            paddingBottom: 4,
+                        }}    
+                    >
+                        <Text style={{
+                            color: 'white',
+                            //backgroundColor: 'red',
+                            fontSize: 23,
+                            fontWeight: 500,
+                            }}
+                            
+                        >
+                            km
+                        </Text>
                     </View>
-                    <TouchableOpacity
-                        onPress={postNodes}
-                        style={[styles.buttonContainer,{backgroundColor:'#8282FF',borderColor:'#6E6ED7' }]}
-                    >
-                        <Text style={styles.buttonText}>경로안내</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-
-                        style={[styles.buttonContainer,{backgroundColor:'#FF5A5A',borderColor:'#EB4646'},]}
-
-                    >
-                        <Text 
-                            style={[styles.buttonText]}
-                            onPress={() => navigation.navigate('MapResult')}
-                        ></Text>
-                    </TouchableOpacity>
                 </View>
-                
-                
 
+                <Divider color='white' orientation="vertical" width={3} />
+
+                {/* 경로 안내와 주행 종료 버튼 */}
+
+                <View
+                    style={{
+                        flex: 3,
+                        //backgroundColor: 'purple',
+                        flexDirection: 'row',
+                        justifyContent: 'space-around',
+                        margin: 2,
+                    }}
+                >
+                    <Button
+                        title="경로 안내"
+                        buttonStyle={{
+                            backgroundColor : 'rgba(111, 202, 186, 1)',
+                            borderRadius: 5,
+                        }}
+                        type="solid"
+                        titleStyle={{ color: 'white' }}
+                        onPress={postNodes}
+                    />
+
+                    <Button
+                        title="주행 종료"
+                        buttonStyle={{
+                            backgroundColor : 'rgba(255, 193, 7, 1)',
+                            borderRadius: 5,
+                        }}
+                        type="solid"
+                        titleStyle={{ color: 'white' }}
+                    />
+                </View>
             </View>
             
             
