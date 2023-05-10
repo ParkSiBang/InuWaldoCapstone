@@ -13,24 +13,26 @@ import java.util.*;
 public class LinksService {
     private final LinksRepository linksRepository;
 
-    public Double weightBySafe(Links link){
+    public Double weightBySafe(Links link, Float drivingScore){
         Double result=0D;
         Double dist=link.getDistance();
         Integer accidentNum=link.getAccidentNum();
         Integer carEntrance=link.getCarEntranceNum();
         Integer childrenZone=link.getChildrenZone();
+        Double rate = (100-(double)drivingScore)/100;
         //거리 가중치 0~300 -> 40 ~ 0
-        if(dist < 500) result += ((500-(double)dist) / 500) * 40;
+        if(dist < 500) result += (dist / 500) * 40;
         //사고횟수 0~2 -> 20~0
-        if(accidentNum <= 2 ) result += ((2-(double)accidentNum)/2)*20;
+        if(accidentNum <= 2 ) result += (((double)accidentNum)/2)*20*rate;
         //차량출입구 0~4 -> 20~0
-        if(carEntrance <= 4) result += ((4-(double)accidentNum)/4)*20;
+        if(carEntrance <= 4) result += (((double)accidentNum)/4)*20*rate;
         //어린이보호구역 = 0 or 20
-        if(childrenZone == 0) result += 20;
+        if(childrenZone == 1) result += 20*rate;;
+
 
         return result;
     }
-    public Queue<Links> findPath(Integer start, Integer dest, boolean type){ //시작,목적지,타입 true=최단, false=안전
+    public Queue<Links> findPath(Integer start, Integer dest, boolean type , Float drivingScore){ //시작,목적지,타입 true=최단, false=안전
         List<Links> allLinks = linksRepository.findAll();
 
 
@@ -51,7 +53,7 @@ public class LinksService {
             if(type) {
                 weight = link.getDistance();
             }else{
-                weight = weightBySafe(link);
+                weight = weightBySafe(link,drivingScore);
             }
 
             if(paths.containsKey(startIndex)){ //이미 등록된 노드면 path만 추가

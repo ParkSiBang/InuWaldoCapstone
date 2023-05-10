@@ -46,6 +46,7 @@ public class PathControllerTest extends TestCase {
                 .startLongitude(126.641808)
                 .destLatitude(37.388334)
                 .destLongitude(126.642515)
+                .userId("jo1234")
                 .build();
 
         String url="http://localhost:" + port + "/path";

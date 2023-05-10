@@ -4,6 +4,7 @@ import MapView, {Marker, Polyline, AnimatedRegion, MarkerAnimated, Overlay} from
 import Geolocation from '@react-native-community/geolocation';
 import { Divider, Button } from '@rneui/themed';
 import axios from 'axios';
+import { SERVER_ADDRESS } from '../global';
 const {width, height} = Dimensions.get('screen');
 import { 
     accelerometer,
@@ -89,7 +90,7 @@ export default function Map({navigation}) {
             console.log(error);
           },
           {
-            //enableHighAccuracy: true,
+            enableHighAccuracy: true,
             distanceFilter: 10,
             interval: 1000,
             fastestInterval: 1000
@@ -158,7 +159,7 @@ export default function Map({navigation}) {
           });
         },
         error => console.log(error),
-        { //enableHighAccuracy: true, 
+        {   enableHighAccuracy: true, 
             timeout: 20000, 
             maximumAge: 1000 }
       );
@@ -171,11 +172,12 @@ export default function Map({navigation}) {
             console.log("좌표설정이 안되어있습니다.")
         }else{
             try {
-                const response = await axios.post('http://192.168.35.227:8080/path', {
+                const response = await axios.post(SERVER_ADDRESS+"/path", {
                    startLatitude: `${now.latitude}`,
                    startLongitude: `${now.longitude}`,
                    destLatitude: `${destination.coords.latitude}`,
-                   destLongitude: `${destination.coords.longitude}`
+                   destLongitude: `${destination.coords.longitude}`,
+                   userId: "sihyun1234",
                 });
                 
                 var array = [];
@@ -283,16 +285,16 @@ export default function Map({navigation}) {
                     destination ? <Marker  coordinate={destination.coords} pinColor={destination.pinColor}/> : null
                 }
                 <Polyline
-                strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-                strokeColors={['#7F0000']}
+                strokeColor="#0080FF" // fallback for when `strokeColors` is not supported by the map-provider
+                
                 strokeWidth={6}
                 coordinates={naviMode.routes}
                 >
                 </Polyline>
                 <Polyline
                     coordinates={coordinates}
-                    strokeColor="#FF0000"
-                    strokeWidth={2}
+                    strokeColor="#6E6E6E"
+                    strokeWidth={6}
                 />
             </MapView>
 

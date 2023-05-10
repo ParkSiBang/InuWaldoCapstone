@@ -17,6 +17,6 @@ public class LinksServiceTest extends TestCase {
     private LinksService linksService;
     @Test
     public void testFindPath() {
-        Queue<Links> q= linksService.findPath(3001,3005,true);
+        Queue<Links> q= linksService.findPath(3001,3005,true,50F);
     }
 }

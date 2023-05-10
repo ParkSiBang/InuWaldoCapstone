@@ -14,11 +14,14 @@ public class PathRequestDto {
     Double destLatitude;
     Double destLongitude;
 
+    String userId;
+
     @Builder
-    public PathRequestDto(Double startLatitude, Double startLongitude, Double destLatitude, Double destLongitude){
+    public PathRequestDto(Double startLatitude, Double startLongitude, Double destLatitude, Double destLongitude, String userId){
         this.startLatitude = startLatitude;
         this.startLongitude=startLongitude;
         this.destLatitude=destLatitude;
         this.destLongitude=destLongitude;
+        this.userId=userId;
     }
 }
