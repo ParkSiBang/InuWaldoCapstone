@@ -1,0 +1,2 @@
+const SERVER_ADDRESS = "http://192.168.35.227:8080/"
+export {SERVER_ADDRESS}

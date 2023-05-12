@@ -12,6 +12,7 @@ import {
     SensorTypes 
     } from "react-native-sensors";
 import { getDistance } from 'geolib'; //좌표 사이거리 계산
+import { SERVER_ADDRESS } from '../../global';
 
 let drivingDistance = 3.5;
 let speedingNum = 1.2;      // 과속
@@ -19,7 +20,7 @@ let sharpLowSpeedNum = 2;   // 급감속
 let sharpHighSpeedNum = 3;  // 급과속
 let accidentNum = 1;        // 사고 횟수
 
-export default function Map({navigation}) {
+export default function FreeMap({navigation}) {
     const [now,setNow] =useState(null);
     const [destination, setDestination] = useState(null); //목적지 좌표
     const [accData,setAccData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0}); //가속센서 데이터
@@ -171,11 +172,12 @@ export default function Map({navigation}) {
             console.log("좌표설정이 안되어있습니다.")
         }else{
             try {
-                const response = await axios.post('http://192.168.35.227:8080/path', {
+                const response = await axios.post(SERVER_ADDRESS + '/path', {
                    startLatitude: `${now.latitude}`,
                    startLongitude: `${now.longitude}`,
                    destLatitude: `${destination.coords.latitude}`,
-                   destLongitude: `${destination.coords.longitude}`
+                   destLongitude: `${destination.coords.longitude}`,
+                   userId: "sihyun1234",
                 });
                 
                 var array = [];
@@ -283,19 +285,22 @@ export default function Map({navigation}) {
                     destination ? <Marker  coordinate={destination.coords} pinColor={destination.pinColor}/> : null
                 }
                 <Polyline
-                strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-                strokeColors={['#7F0000']}
+                strokeColor="#0080FF" // fallback for when `strokeColors` is not supported by the map-provider
+                
                 strokeWidth={6}
                 coordinates={naviMode.routes}
                 >
                 </Polyline>
                 <Polyline
                     coordinates={coordinates}
-                    strokeColor="#FF0000"
-                    strokeWidth={2}
+                    strokeColor="#6E6E6E"
+                    strokeWidth={6}
                 />
+                
+                
+            
             </MapView>
-
+            
             {/* 속도와 button 상태창 */}
 
            <View 
@@ -398,7 +403,7 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         margin:5,
-        //alignItems: 'center',
+        alignItems: 'center',
         backgroundColor:"white",
 
     },
