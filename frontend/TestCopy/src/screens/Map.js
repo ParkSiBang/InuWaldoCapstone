@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text,ImageBackground, StyleSheet, TouchableOpacity, Platform, PermissionsAndroid, Dimensions} from 'react-native';
+import {View, Text,ImageBackground, StyleSheet, TouchableOpacity, Platform, PermissionsAndroid, Dimensions,Alert} from 'react-native';
 import MapView, {Marker, Polyline, AnimatedRegion, MarkerAnimated, Overlay} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { Divider, Button } from '@rneui/themed';
@@ -15,7 +15,7 @@ import { getDistance } from 'geolib'; //좌표 사이거리 계산
 import { SERVER_ADDRESS } from '../../global';
 import { speedingNum } from './FreeMap';
 
-export default function FreeMap({navigation}) {
+export default function FreeMap({navigation,route}) {
     const [now,setNow] =useState(null);
     const [destination, setDestination] = useState(null); //목적지 좌표
     const [accData,setAccData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0}); //가속센서 데이터
@@ -63,7 +63,32 @@ export default function FreeMap({navigation}) {
 
     let subscription = null; //가속
     let subscription2 = null; //자이로
-    
+
+    const email=route.params.email;
+    const reqLogin = async () => {
+        try {
+            console.log(route.params)
+            const response = await axios.post(SERVER_ADDRESS + '/isLogin', {
+               userId: route.params.email,
+            });
+            console.log(response.data);
+            if(response.data == "success"){
+                //성공 시 통과
+                console.log("로그인 검증 성공");
+                
+            }
+            else{ //실패시
+                Alert.alert('signing Error:'+response.data);
+                navigation.navigate('Signin');
+            }
+            
+            
+        }
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('sigining Error', error.message)
+        }
+    }
     
 
     useEffect(() => {
@@ -191,6 +216,7 @@ export default function FreeMap({navigation}) {
     const [initialRegion, setInitialRegion] = useState(null);
 
     useEffect(() => {
+        reqLogin();
       Geolocation.getCurrentPosition(
         position => {
           const { latitude, longitude } = position.coords;
@@ -224,7 +250,7 @@ export default function FreeMap({navigation}) {
                    startLongitude: `${now.longitude}`,
                    destLatitude: `${destination.coords.latitude}`,
                    destLongitude: `${destination.coords.longitude}`,
-                   userId: "sihyun1234",
+                   userId: route.params.email,
                 });
                 
                 var array = [];
@@ -449,6 +475,7 @@ export default function FreeMap({navigation}) {
                             accidentNum: accidentNum,
                             sharpCurvingNum: sharpCurvingNum,
                             accidentCoordinates:accidentCoordinates,
+                            email,
                         })}
                     />
                 </View>

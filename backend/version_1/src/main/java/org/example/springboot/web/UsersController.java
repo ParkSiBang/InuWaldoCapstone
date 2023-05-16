@@ -25,16 +25,22 @@ public class UsersController {
     //회원가입
     @PostMapping("/join")
     public String join(@RequestBody UsersRequestDto usersRequestDto) {
-        Users user = new Users();
-        user.setUserId(usersRequestDto.getUserId());
-        user.setPassword(usersRequestDto.getPassword());
-        user.setName(usersRequestDto.getName());
-        user.setDrivingScore(100F); //초기 회원가입 기본값
-        user.setMileage(100L);
-        user.setTotalDistance(0F);
+        try {
+            Users user = new Users();
+            user.setUserId(usersRequestDto.getUserId());
+            user.setPassword(usersRequestDto.getPassword());
+            user.setName(usersRequestDto.getName());
+            user.setDrivingScore(100F); //초기 회원가입 기본값
+            user.setMileage(100L);
+            user.setTotalDistance(0F);
 
-        usersService.join(user);
-        return "redirect:/";
+            usersService.join(user);
+        }catch(IllegalStateException e){
+            System.out.println(e);
+            return "fail";
+
+        }
+        return "success";
     }
 
     //회원탈퇴
@@ -57,11 +63,11 @@ public class UsersController {
         Users loginUser = usersService.login(usersRequestDto.getUserId(), usersRequestDto.getPassword());
 
         if (loginUser == null) {
-            return "redirect:/login";
+            return "없는 유저입니다.";
         }
         else {
             session.setAttribute("userId", loginUser.getUserId());
-            return "redirect:/";
+            return "success";
         }
     }
 
@@ -89,5 +95,15 @@ public class UsersController {
                 .build();
 
         return usersResponseDto;
+    }
+    @PostMapping("/isLogin")
+    public String isLogin(@RequestBody UsersRequestDto usersRequestDto, HttpSession session) {
+
+        if (usersRequestDto.getUserId().equals((String)session.getAttribute("userId"))){
+            return "success";
+        }
+        else {
+            return "fail";
+        }
     }
 }
