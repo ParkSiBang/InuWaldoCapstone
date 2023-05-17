@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.springboot.domain.links.Links;
 import org.example.springboot.domain.localNodes.LocalNodes;
 import org.example.springboot.domain.localNodes.LocalNodesRepository;
+import org.example.springboot.service.Links.LinksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +18,12 @@ import java.util.Queue;
 @RequiredArgsConstructor //final이 선언된 모든 필드를 인자값으로하는 생성자를 대신 생성 (리포지토리를 대신 생성)
 public class LocalNodesService {
     private final LocalNodesRepository localNodesRepository;
+    private final LinksService linksService;
 
     //경도와 위도를 받아서 가장 가까운 노드 nodeId반환
+    public List<LocalNodes> getAll(){
+        return localNodesRepository.findAll();
+    }
 
     public Integer closestNode(Double longitude, Double latitude){
         List<LocalNodes> localNodesList= localNodesRepository.findAll();
@@ -54,7 +59,7 @@ public class LocalNodesService {
         d = Math.sqrt(lad+lod);
         return d;
     }
-    public ArrayList<Route> insertCoordinate(Queue<Links> input){
+    public ArrayList<Route> insertCoordinate(Queue<Links> input,Float drivingScore){
         ArrayList<Route> result = new ArrayList<>();
         while(!input.isEmpty()){
             Links l = input.poll();
@@ -64,6 +69,7 @@ public class LocalNodesService {
             if(l.getChildrenZone() != 0) childZone=true;
             LocalNodes sNode=localNodesRepository.findByNodeId(s).get();
             LocalNodes dNode=localNodesRepository.findByNodeId(d).get();
+            Double score = linksService.weightBySafe(l,drivingScore);
             Route r = Route.builder()
                     .startLatitude(sNode.getLatitude())
                     .startLongitude(sNode.getLongitude())
@@ -72,6 +78,7 @@ public class LocalNodesService {
                     .childZone(childZone)
                     .accidentNum(l.getAccidentNum())
                     .carEntranceNum(l.getCarEntranceNum())
+                    .score(score)
                     .build();
             result.add(0,r);
         }

@@ -14,6 +14,7 @@ public class Route {
     private boolean childZone;
     private Integer accidentNum;
     private Integer carEntranceNum;
+    private Double score;
     @Builder
     public Route(Double startLatitude,
                  Double startLongitude,
@@ -21,7 +22,8 @@ public class Route {
                  Double destLongitude,
                  boolean childZone,
                  Integer accidentNum,
-                 Integer carEntranceNum){
+                 Integer carEntranceNum,
+                 Double score){
         this.startLatitude=startLatitude;
         this.startLongitude=startLongitude;
         this.destLatitude=destLatitude;
@@ -29,6 +31,7 @@ public class Route {
         this.childZone=childZone;
         this.accidentNum=accidentNum;
         this.carEntranceNum=carEntranceNum;
+        this.score=score;
 
     }
 }

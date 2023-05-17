@@ -3,16 +3,26 @@ package org.example.springboot.service.Links;
 import lombok.RequiredArgsConstructor;
 import org.example.springboot.domain.links.Links;
 import org.example.springboot.domain.links.LinksRepository;
+import org.example.springboot.service.LocalNodes.Route;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class LinksService {
     private final LinksRepository linksRepository;
+    public Queue<Links> getAll(){
+        Queue<Links> result = new LinkedList<>();
+        List<Links> links = linksRepository.findAll();
+        for (Links l:links) {
+            result.add(l);
+        }
 
+        return result;
+    }
     public Double weightBySafe(Links link, Float drivingScore){
         Double result=0D;
         Double dist=link.getDistance();
