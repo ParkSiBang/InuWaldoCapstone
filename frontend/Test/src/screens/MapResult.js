@@ -1,9 +1,11 @@
-import React from 'react';
-import { StatusBar, Text, View } from 'react-native';
+import React,{useEffect} from 'react';
+import { StatusBar, Text, View,Alert } from 'react-native';
 import { Button } from '../components';
 import styled from 'styled-components/native';
 import { Card } from '@rneui/themed';
 import { drivingDistance } from './FreeMap';
+import axios from 'axios';
+import { SERVER_ADDRESS } from '../../global';
 
 const Container = styled.View`
     flex: 1;
@@ -52,6 +54,35 @@ const MapResult = ({navigation, route}) => {
 
     let ResultMile = route.params.drivingDistance - route.params.speedingNum*100 - route.params.sharpSpeedingNum*10 
     - route.params.accidentNum*50 - route.params.sharpCurvingNum*10;
+
+    const email=route.params.email;
+    const reqLogin = async () => {
+        try {
+            console.log(route.params)
+            const response = await axios.post(SERVER_ADDRESS + '/isLogin', {
+               userId: route.params.email,
+            });
+            console.log(response.data);
+            if(response.data == "success"){
+                //성공 시 통과
+                console.log("로그인 검증 성공");
+                
+            }
+            else{ //실패시
+                Alert.alert('signing Error:'+response.data);
+                navigation.navigate('Signin');
+            }
+            
+            
+        }
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('sigining Error', error.message)
+        }
+    }
+    useEffect(()=>{
+        reqLogin(); //페이지 시작 시 로그인 검증
+    },[]);
 
     return (
         <Container>

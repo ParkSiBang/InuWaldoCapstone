@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Alert, Image } from 'react-native';
 import { validateEmail, removeWhitespace } from '../utils';
+import axios from 'axios';
+import { SERVER_ADDRESS } from '../../global';
 
 // 로그인 화면
 
@@ -48,9 +50,33 @@ const Signin = ({navigation}) => {
         setPassword(removeWhitespace(password));
     };
 
+    const _handleSigninBtnPress = async () => {
+        try {
+            const response = await axios.post(SERVER_ADDRESS + '/login', {
+               userId: email,
+               password:password,
+            });
+            console.log(response.data);
+            if(response.data == "success"){
+                //성공시 profile화면으로
+                navigation.navigate('Profile', {email, password});
+            }
+            else{
+                Alert.alert('signing Error:'+response.data);
+            }
+            
+            
+        }
+
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('sigining Error', e.message)
+        }
+    }
+
 
     // email과 password 확인 후, 이상없으면 profile 화면으로 이동
-    const _handleSigninBtnPress = async () => {
+   // const  _handleSigninBtnPress= async () => {
         
         // signin은 firebase에서 규명, 백엔드 연동시 참조
 
@@ -76,8 +102,8 @@ const Signin = ({navigation}) => {
         //     alert('이메일 틀림');
         // }
 
-        navigation.navigate('Profile', {email, password});
-    };
+        //navigation.navigate('Profile', {email, password});
+    //};
 
     return (
         <KeyboardAwareScrollView 
@@ -116,7 +142,7 @@ const Signin = ({navigation}) => {
                     textStyle={{ color: theme.btnTextLink, fontSize: 18 }}
                 />
                 
-                {/* 테스트용 버튼
+                {/*테스트용 버튼*/}
                 
                 <Button 
                     title="test button to profile" 
@@ -125,7 +151,7 @@ const Signin = ({navigation}) => {
                 <Button 
                     title="test button to UserPage" 
                     onPress={() => navigation.navigate('UserPage')}
-                /> */}
+                />
             </Container>
         </KeyboardAwareScrollView>
     );

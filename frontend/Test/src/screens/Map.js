@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text,ImageBackground, StyleSheet, TouchableOpacity, Platform, PermissionsAndroid, Dimensions} from 'react-native';
+import {View, Text,ImageBackground, StyleSheet, TouchableOpacity, Platform, PermissionsAndroid, Dimensions,Alert} from 'react-native';
 import MapView, {Marker, Polyline, AnimatedRegion, MarkerAnimated, Overlay} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { Divider, Button } from '@rneui/themed';
@@ -15,23 +15,26 @@ import { getDistance } from 'geolib'; //좌표 사이거리 계산
 import { SERVER_ADDRESS } from '../../global';
 import { speedingNum } from './FreeMap';
 
-export default function FreeMap({navigation}) {
+export default function FreeMap({navigation,route}) {
     const [now,setNow] =useState(null);
     const [destination, setDestination] = useState(null); //목적지 좌표
     const [accData,setAccData]=useState({px:0,py:0,pz:0,x:0,y:0,z:0}); //가속센서 데이터
     const [gyroTimeStamp,setGyroTimeStamp]=useState(null); //방향센서 데이터
     const [accMessage,setAccMessage]=useState(false); //급가속 경고 메시지 on off
+    const [brkMessage,setBrkMessage]=useState(false); //급감속 경고 메시지 on off
     const [gyroMessage,setGyroMessage]=useState(false); //급커브 경고 메시지 on off
     const [speedMessage,setSpeedMessage]=useState(false); //과속 경고 메시지 on off
     const [accidentMessage,setAccidentMessage]=useState(false); //과속 경고 메시지 on off
     const [coordinates, setCoordinates] = useState([]); //이동경로
     const [prevLocation, setPrevLocation] = useState(null);
     const [prevTimestamp,setPrevTimeStamp]=useState(null); //속도측정용 timestamp
-    const [naviMode,setNaviMode] = useState({routes:[],accCheckMode:false,gyroCheckMode:false});
+    const [naviMode,setNaviMode] = useState({routes:[],checkMode:false});
+    const [accidentCoordinates,setAccidentCoordinates]=useState([]);
 
     // const [speed,setSpeed]=useState(0);
     // const [speedingNum, setSpeedingNum] = useState(0); // 과속
-    // const [sharpSpeedingNum, setSharpSpeedingNum] = useState(0); // 급변속
+    // const [sharpSpeedingNum, setSharpSpeedingNum] = useState(0); // 급가속
+    // const [sharpBreakingNum, setSharpBreakingNum] = useState(0); //급감속
     // const [accidentNum, setAccidentNum] = useState(0); // 사고횟수
     // const [sharpCurvingNum, setSharpCurvingNum] = useState(0); // 급회전
     // const [distance, setDistance] = useState(0); //이동거리
@@ -41,7 +44,8 @@ export default function FreeMap({navigation}) {
     // card 출력용 테스트 데이터
     const [speed,setSpeed]=useState(1);
     const [speedingNum, setSpeedingNum] = useState(1); // 과속
-    const [sharpSpeedingNum, setSharpSpeedingNum] = useState(1); // 급변속
+    const [sharpSpeedingNum, setSharpSpeedingNum] = useState(1); // 급가속
+    const [sharpBreakingNum, setSharpBreakingNum] = useState(1); //급감속
     const [accidentNum, setAccidentNum] = useState(1); // 사고횟수
     const [sharpCurvingNum, setSharpCurvingNum] = useState(1); // 급회전
     const [distance, setDistance] = useState(1000); //이동거리
@@ -59,31 +63,72 @@ export default function FreeMap({navigation}) {
 
     let subscription = null; //가속
     let subscription2 = null; //자이로
-    
+
+    const email=route.params.email;
+    const reqLogin = async () => {
+        try {
+            console.log(route.params)
+            const response = await axios.post(SERVER_ADDRESS + '/isLogin', {
+               userId: route.params.email,
+            });
+            console.log(response.data);
+            if(response.data == "success"){
+                //성공 시 통과
+                console.log("로그인 검증 성공");
+                
+            }
+            else{ //실패시
+                Alert.alert('signing Error:'+response.data);
+                navigation.navigate('Signin');
+            }
+            
+            
+        }
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('sigining Error', error.message)
+        }
+    }
     
 
     useEffect(() => {
+        
         const watchId = Geolocation.watchPosition(
           position => {
             const { latitude, longitude } = position.coords;
             const timestamp= position.timestamp;
             const newCoordinate = { latitude, longitude };
             if(coordinates.length < 10000){// 메모리 방지.
-            setCoordinates([...coordinates, newCoordinate]);
+                setCoordinates([...coordinates, newCoordinate]);
             }
 
-            if (prevLocation) {
+            if (prevLocation && naviMode.checkMode) {
+                
                 const newDistance = getDistance(prevLocation, position.coords);
                 const timeDiff = timestamp-prevTimestamp
                 const nowSpeed= (newDistance/timeDiff)*3600; //km/hr
+                const speedDiff = (speed-nowSpeed)*(1000/timeDiff); //초당 속도변화량
                 if(prevTimestamp){
-                    if(nowSpeed>20) {
+                    if(nowSpeed>25) {
                         setSpeedMessage(true);
+                        setTimeout(()=>{setSpeedMessage(false)},3000);
                         console.log("과속 감지! " + nowSpeed);
                         setSpeedingNum(speedingNum => speedingNum +1 );
                     }
+                    if(speedDiff >= 5){ //1초에 5km/hr 증가
+                        setAccMessage(true);
+                        setTimeout(()=>{setAccMessage(false);},3000);
+                        console.log("급가속 감지! "+ speedDiff);
+                        setSharpSpeedingNum(sharpSpeedingNum => sharpSpeedingNum + 1)
+                    }
+                    if(speedDiff <= -5){ //1초에 5km/hr 감소
+                        setBrkMessage(true);
+                        setTimeout(()=>{setBrkMessage(false);},3000);
+                        console.log("급감속 감지! "+ speedDiff);
+                        setSharpBreakingNum(sharpBreakingNum => sharpBreakingNum + 1)
+                    }
                     spdRef.current=nowSpeed;
-                    setSpeed(parseInt(nowSpeed));
+                    setSpeed(nowSpeed);
                     
                 }
                 
@@ -111,22 +156,31 @@ export default function FreeMap({navigation}) {
         };
       }, [coordinates]);
 
-    
+    useEffect(()=>{
+        if(now!=null)setAccidentCoordinates([...accidentCoordinates,now])
+
+    },[accidentNum])
     
     useEffect(()=>{
-        if(naviMode.accCheckMode){
+        if(naviMode.checkMode){
             subscription = accelerometer.subscribe(({ x, y, z, timestamp }) =>
                 {
                     const prevAcc = Math.sqrt(px*px+py*py+pz*pz)
                     const nowAcc = Math.sqrt(x*x+y*y+z*z)
-                    if(prevAcc + 11 < nowAcc && spdRef.current > 5  ) {
-                        setAccMessage(true); //2m/ss 이상 가속시 경고
-                        setSharpSpeedingNum(sharpSpeedingNum => sharpSpeedingNum + 1);
-                        console.log('급가속 감지!: '+ (prevAcc-nowAcc));
+                    //if(prevAcc + 11 < nowAcc && spdRef.current > 5  ) {
+                    //    setAccMessage(true); //2m/ss 이상 가속시 경고
+                    //    setSharpSpeedingNum(sharpSpeedingNum => sharpSpeedingNum + 1);
+                    //    console.log('급가속 감지!: '+ (prevAcc-nowAcc));
                     // }else if(prevAcc + 8 <= nowAcc){
                     //     setAccidentMessage(true); //2m/ss 이상 가속시 경고
                     //     console.log('사고 감지!(급가속): '+ (prevAcc-nowAcc));
                     //     setAccidentNum(accidentNum  => accidentNum + 1);
+                    //}
+                    if(prevAcc + 20 < nowAcc){
+                        setAccidentMessage(true);
+                        setTimeout(()=>{setAccidentMessage(false);},3000);
+                        console.log('사고 감지!(급가속): '+ (prevAcc-nowAcc));
+                        setAccidentNum(accidentNum  => accidentNum + 1);
                     }
                     px=x;
                     py=y;
@@ -134,22 +188,21 @@ export default function FreeMap({navigation}) {
                     setAccData({x:x,y:y,z:z});
                 });
         }
-        if(naviMode.gyroCheckMode){
+        if(naviMode.checkMode){
             subscription = gyroscope.subscribe(({ x, y, z, timestamp }) =>
                 {
                     const dt = (timestamp - previousTimestamp) / 1000; // 시간 변화량 (s)
                     const dz = z * dt; // x 축 회전 각도 변화량 (rad)
                     const rotate = Math.abs(dz) / dt * (180 / Math.PI);
-                    
-                    console.log(spdRef.current);
                     //console.log(rotate);
-                    if (dt && rotate > 55 && spdRef.current > 10 ) {
+                    if (dt && rotate > 55 && spdRef.current > 10 ) { //10km이상에서 55도이상 회전시
                         setGyroMessage(true);
                         console.log('급커브 감지!: '+rotate);
 
                         setSharpCurvingNum(sharpCurvingNum => sharpCurvingNum + 1);
                     }else if(rotate >= 250){
                         setAccidentMessage(true);
+                        setTimeout(()=>{setAccidentMessage(false);},3000);
                         console.log('사고 감지!(급커브): '+rotate);
                         setAccidentNum(accidentNum => accidentNum + 1);
                     }
@@ -157,16 +210,19 @@ export default function FreeMap({navigation}) {
 
                 });
         }
+        
 
     },[naviMode])
     const [initialRegion, setInitialRegion] = useState(null);
 
     useEffect(() => {
+        reqLogin();
       Geolocation.getCurrentPosition(
         position => {
           const { latitude, longitude } = position.coords;
           console.log(longitude)
           console.log(latitude)
+          
           setNow({latitude: latitude, longitude:longitude});
           setInitialRegion({
             latitude: latitude,
@@ -194,7 +250,7 @@ export default function FreeMap({navigation}) {
                    startLongitude: `${now.longitude}`,
                    destLatitude: `${destination.coords.latitude}`,
                    destLongitude: `${destination.coords.longitude}`,
-                   userId: "sihyun1234",
+                   userId: route.params.email,
                 });
                 
                 var array = [];
@@ -206,7 +262,7 @@ export default function FreeMap({navigation}) {
                     array = [...array,{latitude: route.destLatitude,longitude:route.destLongitude}];
                 })
                 console.log(array);
-                setNaviMode({routes:array,accCheckMode:true,gyroCheckMode:true});
+                setNaviMode({routes:array,checkMode:true});
             }
 
             catch (error) {
@@ -264,6 +320,15 @@ export default function FreeMap({navigation}) {
                         style={styles.warning}
                         >
                         <Text style={styles.warningText}>급가속 경고</Text>
+                        
+                    </TouchableOpacity>: null
+                }
+                 {brkMessage? 
+                    <TouchableOpacity
+                        onPress={()=>setBrkMessage(false)}
+                        style={styles.warning}
+                        >
+                        <Text style={styles.warningText}>급감속 경고</Text>
                         
                     </TouchableOpacity>: null
                 }
@@ -349,7 +414,7 @@ export default function FreeMap({navigation}) {
 
                         fontWeight: 600,
                     }}> 
-                        {speed}
+                        {parseInt(speed)}
                     </Text>
                     <View
                         style={{
@@ -406,8 +471,11 @@ export default function FreeMap({navigation}) {
                             drivingDistance: distance, 
                             speedingNum: speedingNum, 
                             sharpSpeedingNum: sharpSpeedingNum,
+                            sharpBreakingNum: sharpBreakingNum,
                             accidentNum: accidentNum,
                             sharpCurvingNum: sharpCurvingNum,
+                            accidentCoordinates:accidentCoordinates,
+                            email,
                         })}
                     />
                 </View>

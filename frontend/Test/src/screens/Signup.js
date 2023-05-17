@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components/native';
 import { Button, Input } from '../components';
-import {Image} from 'react-native';
+import {Image, Alert} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import axios from 'axios';
+import { SERVER_ADDRESS } from '../../global';
 
 
 {/*
@@ -29,9 +31,31 @@ export const Signup = () => {
     const refPassword = useRef(null);
     const refPasswordConfirm = useRef(null);
 
-    const _handleSignupBtnPress = () => {
-        console.log('Signup');
+    const _handleSignupBtnPress = async () => {
+        try {
+            const response = await axios.post(SERVER_ADDRESS + '/join', {
+               userId: email,
+               password:password,
+               name:name
+            });
+            console.log(response.data);
+            if(response.data == "success"){
+                //성공시 홈화면으로
+            }
+            else{
+                Alert.alert('Join Error');
+            }
+            
+            
+        }
+
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('Join Error', error.message)
+        }
     }
+    
+  
 
     // 잘못된 회원가입입니다.
 
@@ -89,7 +113,7 @@ export const Signup = () => {
                 />
                 <Button 
                     title="Sign up" 
-                    onPress={_handleSignupBtnPress} 
+                    onPress={_handleSignupBtnPress}
                 />
             </Container>
         </ KeyboardAwareScrollView>

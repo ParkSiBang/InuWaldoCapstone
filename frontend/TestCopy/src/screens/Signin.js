@@ -59,7 +59,7 @@ const Signin = ({navigation}) => {
             console.log(response.data);
             if(response.data == "success"){
                 //성공시 profile화면으로
-                navigation.navigate('Profile', {email, password});
+                navigation.navigate('Profile', {email});
             }
             else{
                 Alert.alert('signing Error:'+response.data);
