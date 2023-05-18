@@ -19,7 +19,7 @@ const Text_Welcome = styled.Text`
     margin-bottom: 50px;
 `;
 
-const RecentRecord = ({navigation}) => {
+const RecentRecord = ({navigation, route}) => {
     return (
         <Container>
             <Image

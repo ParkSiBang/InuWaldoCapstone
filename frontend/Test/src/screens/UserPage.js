@@ -1,18 +1,52 @@
-import React from 'react';
-import { StatusBar, View, Text, Image, } from 'react-native';
+import React, {useEffect} from 'react';
+import { StatusBar, View, Text, Image, Alert} from 'react-native';
 import {Map, Signup} from './'
 import styled from 'styled-components/native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, Card } from '@rneui/themed';
+import axios from 'axios';
+import { SERVER_ADDRESS } from '../../global';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import Icon1 from 'react-native-vector-icons/Foundation';
 
 const Tab = createBottomTabNavigator();
 
 const UserPage = ({navigation, route}) => {
     console.log(11)
     console.log(route.params)
+    console.log('!' + route.params.email)
+
+    const email = route.params.email;
+    const reqLogin = async () => {
+        try {
+            console.log(route.params)
+            const response = await axios.post(SERVER_ADDRESS + '/isLogin', {
+               userId: route.params.email,
+            });
+            console.log(response.data);
+            if(response.data == "success"){
+                //성공 시 통과
+                console.log("로그인 검증 성공");
+                
+            }
+            else{ //실패시
+                Alert.alert('signing Error:'+response.data);
+                navigation.navigate('Signin');
+            }
+            
+            
+        }
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('sigining Error', error.message)
+        }
+    }
+
+    useEffect(()=>{
+        reqLogin(); //페이지 시작 시 로그인 검증
+    },[]);
+
     return (
 
         console.log(route.params.sharpSpeedingNum),
@@ -339,6 +373,43 @@ const UserPage = ({navigation, route}) => {
                             marginLeft: 130,
                         }}
                 /> */}
+            </View>
+            <View
+                style={{
+                    height: 60,
+                    //backgroundColor: 'purple',
+                    flexDirection: 'row',
+                    //justifyContent: 'space-around',
+                }}
+            >
+                <Button
+                    buttonStyle={{
+                        backgroundColor : '#6B9CFF',
+                        width: 180,
+                        flex: 1,
+                        flexDirection: 'column',
+                    }}
+                    type="solid"
+                    titleStyle={{ color: 'white' }}
+                    onPress={() => navigation.navigate('Profile',{email})}
+                >
+                    <Icon1 style={{color: 'white',}} name="home" size={25} />
+                    <Text style={{color: 'white',}}>Home</Text>
+                </Button>
+
+                <Button
+                    buttonStyle={{
+                        backgroundColor : '#6B9CFF',
+                        width: 180,
+                        flex: 1,
+                        flexDirection: 'column',
+                    }}
+                    type="solid"
+                    titleStyle={{ color: 'white' }}
+                >
+                    <Icon1 style={{color: 'white',}} name="torso" size={25} />
+                    <Text style={{color: 'white',}}>User</Text>
+                </Button>
             </View>  
         </View>
     );

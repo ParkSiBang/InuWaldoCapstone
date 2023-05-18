@@ -1,5 +1,5 @@
 import React,{useEffect} from 'react';
-import { StatusBar, Text, View,Alert } from 'react-native';
+import { View,Alert } from 'react-native';
 import { Button } from '../components';
 import styled from 'styled-components/native';
 import { Card } from '@rneui/themed';
@@ -154,6 +154,7 @@ const MapResult = ({navigation, route}) => {
                                 sharpSpeedingNum: route.params.sharpSpeedingNum,
                                 accidentNum: route.params.accidentNum,
                                 sharpCurvingNum: route.params.sharpCurvingNum,
+                                email,
                             })}
                             textStyle={{fontSize: 18,}}
                         />

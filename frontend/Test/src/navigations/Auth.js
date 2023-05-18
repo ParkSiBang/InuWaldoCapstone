@@ -39,18 +39,22 @@ const Auth = () => {
             <Stack.Screen 
                 name="Profile" 
                 component={Profile}  
+                options={{headerShown: false}} 
             />
             <Stack.Screen 
                 name="Map" 
                 component={Map}  
+                options={{headerShown: false}} 
             />
             <Stack.Screen 
                 name="MapResult" 
                 component={MapResult}  
+                options={{headerShown: false}} 
             />
             <Stack.Screen 
                 name="UserPage" 
                 component={UserPage}  
+                options={{headerShown: false}} 
             />
             <Stack.Screen 
                 name="RecentRecord" 
@@ -59,6 +63,7 @@ const Auth = () => {
             <Stack.Screen
                 name="FreeMap"
                 component={FreeMap}
+                options={{headerShown: false}} 
             />
         </Stack.Navigator>
     );

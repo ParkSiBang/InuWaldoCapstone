@@ -376,7 +376,7 @@ export default function FreeMap({navigation}) {
                         }}
                         type="solid"
                         titleStyle={{ color: 'white' }}
-                        onPress={() => navigation.navigate('MapResult')}
+                        onPress={() => navigation.navigate('MapResult', {email})}
                     />
                 </View>
             </View>

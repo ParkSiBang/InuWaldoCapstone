@@ -5,6 +5,8 @@ import {Image, Alert} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
 import { SERVER_ADDRESS } from '../../global';
+import Navigation from '../navigations';
+import Signin from './Signin';
 
 
 {/*
@@ -21,7 +23,7 @@ const Container = styled.View`
     padding: 50px 20px;
 `;
 
-export const Signup = () => {
+export const Signup = ({navigation}) => {
     // 갤러리에서 불러온 사진 정보
     const [name, setName] = useState('');    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -41,6 +43,7 @@ export const Signup = () => {
             console.log(response.data);
             if(response.data == "success"){
                 //성공시 홈화면으로
+                navigation.navigate('Signin');
             }
             else{
                 Alert.alert('Join Error');

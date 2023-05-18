@@ -75,7 +75,6 @@ export default function FreeMap({navigation,route}) {
             if(response.data == "success"){
                 //성공 시 통과
                 console.log("로그인 검증 성공");
-                
             }
             else{ //실패시
                 Alert.alert('signing Error:'+response.data);

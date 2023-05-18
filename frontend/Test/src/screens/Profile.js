@@ -2,22 +2,23 @@ import React, { useEffect } from 'react';
 import { StatusBar, View, Text, Image, Alert } from 'react-native';
 import {Signup, profileName} from './Signup'
 import styled from 'styled-components/native';
-import { Button } from '../components';
+import {  Button } from '@rneui/themed';
 import axios from 'axios';
 import { SERVER_ADDRESS } from '../../global';
+import Icon from 'react-native-vector-icons/Foundation';
+
+
 const Container = styled.View`
     flex: 1;
     justify-content: center;
     align-items: center;
     background-color: ${({ theme }) => theme.background};
-    padding: 10px 20px;
 `;
 
 const Text_Welcome = styled.Text`
     font-size: 50px;
     font-weight: 600;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 30px;
 `;
 
 
@@ -55,21 +56,84 @@ const Profile = ({navigation, route}) => {
     return (
         <Container>
             <Image
+                style={{marginTop: 100, }}
                 source={require('Test/assets/images/face.jpg')}/>
             <Text_Welcome>환영합니다</Text_Welcome>
+
             <View
-                style={{ width: 100, }}
+                style={{  
+                    flex: 6, 
+                    //backgroundColor: 'green', 
+                    padding: 20, 
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
             >
                 <Button
                     title="자율 주행"
-                    onPress={() => navigation.navigate('FreeMap')}
-                    textStyle={{fontSize: 18,}}
+                    buttonStyle={{
+                        borderRadius: 3,
+                        margin: 20,
+                        backgroundColor : '#3679fe',
+                    }}
+                    containerStyle={{
+                        width: 150,
+                        marginHorizontal: 50,
+                        marginVertical: 10,
+                    }}
+                    onPress={() => navigation.navigate('FreeMap', {email} )}
                 />
                 <Button
-                    title="길 찾기"
+                    title={'길찾기'}
+                    buttonStyle={{
+                        borderRadius: 3,
+                        margin: 20,
+                        backgroundColor : '#3679fe',
+                    }}
+                    containerStyle={{
+                        width: 150,
+                        marginHorizontal: 50,
+                        marginVertical: 10,
+                    }}
                     onPress={() => navigation.navigate('Map',{email})}
-                    textStyle={{fontSize: 18,}}
                 />
+            </View>
+            <View
+                style={{
+                    height: 60,
+                    //backgroundColor: 'purple',
+                    flexDirection: 'row',
+                    //justifyContent: 'space-around',
+                }}
+            >
+                <Button
+                    buttonStyle={{
+                        backgroundColor : '#6B9CFF',
+                        width: 180,
+                        flex: 1,
+                        flexDirection: 'column',
+                    }}
+                    type="solid"
+                    titleStyle={{ color: 'white' }}
+                >
+                    <Icon style={{color: 'white',}} name="home" size={25} />
+                    <Text style={{color: 'white',}}>Home</Text>
+                </Button>
+
+                <Button
+                    buttonStyle={{
+                        backgroundColor : '#6B9CFF',
+                        width: 180,
+                        flex: 1,
+                        flexDirection: 'column',
+                    }}
+                    type="solid"
+                    titleStyle={{ color: 'white' }}
+                    onPress={() => navigation.navigate('UserPage',{email})}
+                >
+                    <Icon style={{color: 'white',}} name="torso" size={25} />
+                    <Text style={{color: 'white',}}>User</Text>
+                </Button>
             </View>
         </Container>
     );

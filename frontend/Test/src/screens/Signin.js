@@ -112,7 +112,7 @@ const Signin = ({navigation}) => {
         >
             <Container insets={insets}>
                 <Image
-                    source={require('Test/assets/images/icon1.png')}/>
+                    source={require('Test/assets/images/icon.png')}/>
                 <Input
                     label="Email"
                     placeholder="Email"
@@ -144,14 +144,14 @@ const Signin = ({navigation}) => {
                 
                 {/*테스트용 버튼*/}
                 
-                <Button 
+                {/* <Button 
                     title="test button to profile" 
                     onPress={() => navigation.navigate('Profile')}
                 />
                 <Button 
                     title="test button to UserPage" 
                     onPress={() => navigation.navigate('UserPage')}
-                />
+                /> */}
             </Container>
         </KeyboardAwareScrollView>
     );
