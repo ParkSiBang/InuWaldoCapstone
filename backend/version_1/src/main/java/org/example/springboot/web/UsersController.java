@@ -94,8 +94,9 @@ public class UsersController {
 
     //유저정보조회
     @PostMapping("/userInfo")
-    public UsersResponseDto FindUserInfo(HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
+    public UsersResponseDto FindUserInfo(@RequestBody UsersRequestDto usersRequestDto) {
+        String userId = usersRequestDto.getUserId();
+
         Optional<Users> optional = usersService.findByUserId(userId);
         Users FindUser = optional.get(); //Attribute가 없다면 NoSuchElementException 발생
 
@@ -105,8 +106,20 @@ public class UsersController {
                 .drivingScore(FindUser.getDrivingScore())
                 .mileage(FindUser.getMileage())
                 .totalDistance(FindUser.getTotalDistance())
+                .recentDistance(FindUser.getRecentDistance())
+                .totalSharpSpeedingNum(FindUser.getTotalSharpSpeedingNum())
+                .totalSharpBrakingNum(FindUser.getTotalSharpBrakingNum())
+                .totalSharpCurvingNum(FindUser.getTotalSharpCurvingNum())
+                .totalSpeedingNum(FindUser.getTotalSpeedingNum())
+                .totalAccidentNum(FindUser.getTotalAccidentNum())
+                .recentSharpSpeedingNum(FindUser.getRecentSharpSpeedingNum())
+                .recentSharpBrakingNum(FindUser.getRecentSharpBrakingNum())
+                .recentSharpCurvingNum(FindUser.getRecentSharpCurvingNum())
+                .recentSpeedingNum(FindUser.getRecentSpeedingNum())
+                .recentAccidentNum(FindUser.getRecentAccidentNum())
+                .totalDrivingTime(FindUser.getTotalDrivingTime())
+                .recentDrivingTime(FindUser.getRecentDrivingTime())
                 .build();
-
         return usersResponseDto;
     }
 

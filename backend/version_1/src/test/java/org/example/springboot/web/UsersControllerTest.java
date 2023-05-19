@@ -81,8 +81,8 @@ public class UsersControllerTest extends TestCase {
     }
 
     @Test
-    public void 유저컨트롤러_회원조회테스트() throws Exception {
-        String loginId = "qwer";
+    public void 유저컨트롤러_유저정보테스트() throws Exception {
+        String loginId = "joinTestplease";
 
         UsersRequestDto usersRequestDto = UsersRequestDto.builder()
                 .userId(loginId)
