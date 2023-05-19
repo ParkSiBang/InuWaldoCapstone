@@ -45,7 +45,7 @@ export default function FreeMap({navigation,route}) {
     const [speed,setSpeed]=useState(1);
     const [speedingNum, setSpeedingNum] = useState(1); // 과속
     const [sharpSpeedingNum, setSharpSpeedingNum] = useState(1); // 급가속
-    const [sharpBreakingNum, setSharpBreakingNum] = useState(1); //급감속
+    const [sharpBrakingNum, setSharpBrakingNum] = useState(1); //급감속
     const [accidentNum, setAccidentNum] = useState(1); // 사고횟수
     const [sharpCurvingNum, setSharpCurvingNum] = useState(1); // 급회전
     const [distance, setDistance] = useState(1000); //이동거리
@@ -124,7 +124,7 @@ export default function FreeMap({navigation,route}) {
                         setBrkMessage(true);
                         setTimeout(()=>{setBrkMessage(false);},3000);
                         console.log("급감속 감지! "+ speedDiff);
-                        setSharpBreakingNum(sharpBreakingNum => sharpBreakingNum + 1)
+                        setSharpBrakingNum(sharpANum => sharpBrakingNum + 1)
                     }
                     spdRef.current=nowSpeed;
                     setSpeed(nowSpeed);
@@ -470,7 +470,7 @@ export default function FreeMap({navigation,route}) {
                             drivingDistance: distance, 
                             speedingNum: speedingNum, 
                             sharpSpeedingNum: sharpSpeedingNum,
-                            sharpBreakingNum: sharpBreakingNum,
+                            sharpBrakingNum: sharpBrakingNum,
                             accidentNum: accidentNum,
                             sharpCurvingNum: sharpCurvingNum,
                             accidentCoordinates:accidentCoordinates,

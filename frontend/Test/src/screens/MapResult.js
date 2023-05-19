@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import { View,Alert } from 'react-native';
 import { Button } from '../components';
 import styled from 'styled-components/native';
@@ -48,12 +48,24 @@ const MapResult = ({navigation, route}) => {
     //speedingNum sharpCurvingNum accidentNum drivingDistance sharpSpeedingNum
     // 마일리지 최종값
 
+    const [data, setData]=useState({
+        drivingDistance: 0,
+        speedingNum: 0,
+        sharpSpeedingNum: 0,
+        accidentNum: 0,
+        sharpCurvingNum: 0,
+        sharpBrakingNum: 0,
+        ResultMile: 0,
+    });
+
+    setData
+
     console.log("측정 끝 최종 결과");
     
     console.log(route.params)
 
     let ResultMile = route.params.drivingDistance - route.params.speedingNum*100 - route.params.sharpSpeedingNum*10 
-    - route.params.accidentNum*50 - route.params.sharpCurvingNum*10;
+    - route.params.accidentNum*50 - route.params.sharpCurvingNum*10 - route.params.sharpBrakingNum*10;
 
     const email=route.params.email;
     const reqLogin = async () => {
@@ -80,6 +92,36 @@ const MapResult = ({navigation, route}) => {
             Alert.alert('sigining Error', error.message)
         }
     }
+
+    const handleOnpress = async () => {
+        try {
+            console.log(route.params)
+            const response = await axios.post(SERVER_ADDRESS + '/isLogin', {
+                drivingDistance: route.params.drivingDistance, 
+                speedingNum: route.params.speedingNum, 
+                sharpSpeedingNum: route.params.sharpSpeedingNum,
+                accidentNum: route.params.accidentNum,
+                sharpCurvingNum: route.params.sharpCurvingNum,
+                sharpBrakingNum: route.params.sharpBrakingNum,
+                ResultMile: ResultMile,
+        });
+            console.log(response.data);
+            if(response.data == "success"){
+                //성공 시 통과
+               console.log("로그인 검증 성공");
+                
+            }
+            else{ 
+                //실패시
+                Alert.alert('Data Error:'+response.data);
+            }
+        }
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('Data Error', error.message)
+        }
+    }
+
     useEffect(()=>{
         reqLogin(); //페이지 시작 시 로그인 검증
     },[]);
@@ -149,11 +191,11 @@ const MapResult = ({navigation, route}) => {
                         <Button 
                             title="적립" 
                             onPress={() => navigation.navigate('UserPage', {
-                                drivingDistance: route.params.drivingDistance, 
-                                speedingNum: route.params.speedingNum, 
-                                sharpSpeedingNum: route.params.sharpSpeedingNum,
-                                accidentNum: route.params.accidentNum,
-                                sharpCurvingNum: route.params.sharpCurvingNum,
+                                // drivingDistance: route.params.drivingDistance, 
+                                // speedingNum: route.params.speedingNum, 
+                                // sharpSpeedingNum: route.params.sharpSpeedingNum,
+                                // accidentNum: route.params.accidentNum,
+                                // sharpCurvingNum: route.params.sharpCurvingNum,
                                 email,
                             })}
                             textStyle={{fontSize: 18,}}
