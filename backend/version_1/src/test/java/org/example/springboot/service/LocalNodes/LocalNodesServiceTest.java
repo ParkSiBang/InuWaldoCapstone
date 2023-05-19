@@ -26,12 +26,12 @@ public class LocalNodesServiceTest extends TestCase {
     @Test
     public void testClosestNode() {
         //given
-        Double longitude = 59.3;
-        Double latitude = 10.2;
+        Double longitude = 126.6439799;
+        Double latitude = 37.3795179;
         //when
         Optional<Integer> closestNodeId =Optional.ofNullable(localNodesService.closestNode(longitude,latitude));
         //
-        assertThat(closestNodeId.get()).isEqualTo(3001);
+        assertThat(closestNodeId.get()).isEqualTo(2084);
 
     }
     /*

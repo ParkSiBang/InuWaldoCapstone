@@ -61,34 +61,42 @@ public class DrivingRecordService {
         updateUser.get().setTotalDistance(updateDistance);
 
         //사용자 급가속 변경
+        updateUser.get().setRecentSharpSpeedingNum(sharpSpeedingNum);
         Integer beforeSharpSpeedingNum = updateUser.get().getTotalSharpSpeedingNum();
         Integer updateSharpSpeedingNum = beforeSharpSpeedingNum + sharpSpeedingNum;
         updateUser.get().setTotalSharpSpeedingNum(updateSharpSpeedingNum);
-        updateUser.get().setRecentSharpSpeedingNum(sharpSpeedingNum);
 
         //사용자 급감속 변경
+        updateUser.get().setRecentSharpBrakingNum(sharpBrakingNum);
         Integer beforeSharpBrakingNum = updateUser.get().getTotalSharpBrakingNum();
         Integer updateSharpBrakingNum = beforeSharpBrakingNum + sharpBrakingNum;
         updateUser.get().setTotalSharpBrakingNum(updateSharpBrakingNum);
-        updateUser.get().setRecentSharpBrakingNum(sharpBrakingNum);
 
         //사용자 급커브 변경
+        updateUser.get().setRecentSharpCurvingNum(sharpCurvingNum);
         Integer beforeSharpCurvingNum = updateUser.get().getTotalSharpCurvingNum();
         Integer updateSharpCurvingNum = beforeSharpCurvingNum + sharpCurvingNum;
         updateUser.get().setTotalSharpCurvingNum(updateSharpCurvingNum);
-        updateUser.get().setRecentSharpCurvingNum(sharpCurvingNum);
 
         //사용자 과속 변경
+        updateUser.get().setRecentSpeedingNum(speedingNum);
         Integer beforeSpeedingNum = updateUser.get().getTotalSpeedingNum();
         Integer updateSpeedingNum = beforeSpeedingNum + speedingNum;
         updateUser.get().setTotalSpeedingNum(updateSpeedingNum);
-        updateUser.get().setRecentSpeedingNum(speedingNum);
 
         //사용자 사고횟수 변경
+        updateUser.get().setRecentAccidentNum(accidentNum);
         Integer beforeAccidentNum = updateUser.get().getTotalAccidentNum();
         Integer updateAccidentNum = beforeAccidentNum + accidentNum;
         updateUser.get().setTotalAccidentNum(updateAccidentNum);
-        updateUser.get().setRecentAccidentNum(accidentNum);
+
+        /*
+        //사용자 운전시간 변경
+        updateUser.get().setRecentDrivingTime(drivingTime);
+        Integer beforeDrivingTime = updateUser.get().getTotalDrivingTime();
+        Integer updateDrivingTime = beforeDrivingTime + drivingTime;
+        updateUser.get().setTotalDrivingTime(updateDrivingTime);
+        */
 
         usersRepository.save(updateUser.get());
     }
@@ -102,8 +110,7 @@ public class DrivingRecordService {
         for(int i=0; i<accidentCoordinates.length; i++){
             accidentLatitude = accidentCoordinates[i].getLatitude();
             accidentLongitude = accidentCoordinates[i].getLongitude();
-            accidentNodeId = localNodesService.closestNode(accidentLatitude, accidentLongitude);
-
+            accidentNodeId = localNodesService.closestNode(accidentLongitude, accidentLatitude);
             linksService.accidentNumIncrease(accidentNodeId);
         }
     }

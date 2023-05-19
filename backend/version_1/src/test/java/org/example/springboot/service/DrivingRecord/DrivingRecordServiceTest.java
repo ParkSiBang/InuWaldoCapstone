@@ -66,9 +66,10 @@ public class DrivingRecordServiceTest extends TestCase {
     @Test
     public void 링크업데이트테스트() throws Exception {
         CoordinateDto coordinateDto1 = CoordinateDto.builder()
-                .latitude(37.372597)
-                .longitude(126.632243)
+                .latitude(37.370073)
+                .longitude(126.637269)
                 .build();
+
 
         CoordinateDto coordinateDto2 = CoordinateDto.builder()
                 .latitude(37.372345)

@@ -93,7 +93,7 @@ public class UsersController {
 
     //유저정보조회
     @PostMapping("/userInfo")
-    public UsersResponseDto FindUserInfo(@RequestBody UsersRequestDto usersRequestDto) {
+    public UsersResponseDto UserInfo(@RequestBody UsersRequestDto usersRequestDto) {
         String userId = usersRequestDto.getUserId();
 
         Optional<Users> optional = usersService.findByUserId(userId);

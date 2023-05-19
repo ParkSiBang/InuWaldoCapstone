@@ -157,22 +157,21 @@ public class LinksService {
         linkIdList = linksRepository.findAllByStartNode(nodeId);
 
         for(int i = 0; i<linkIdList.size(); i++){
-            Optional<Links> updateLink = linksRepository.findById(linkIdList.get(i).getId());
-            int AccidentNum = updateLink.get().getAccidentNum();
+            Optional<Links> updateStartNodeLink = linksRepository.findById(linkIdList.get(i).getId());
+            int AccidentNum = updateStartNodeLink.get().getAccidentNum();
             AccidentNum = AccidentNum + 1;
-            updateLink.get().setAccidentNum(AccidentNum);
-            linksRepository.save(updateLink.get());
+            updateStartNodeLink.get().setAccidentNum(AccidentNum);
+            linksRepository.save(updateStartNodeLink.get());
         }
 
         linkIdList = linksRepository.findAllByDestNode(nodeId);
 
         for(int i = 0; i<linkIdList.size(); i++){
-            Optional<Links> updateLink = linksRepository.findById(linkIdList.get(i).getId());
-            int AccidentNum = updateLink.get().getAccidentNum();
+            Optional<Links> updateDestNodeLink = linksRepository.findById(linkIdList.get(i).getId());
+            int AccidentNum = updateDestNodeLink.get().getAccidentNum();
             AccidentNum = AccidentNum + 1;
-            updateLink.get().setAccidentNum(AccidentNum);
-            System.out.println(updateLink.get().getId());
-            linksRepository.save(updateLink.get());
+            updateDestNodeLink.get().setAccidentNum(AccidentNum);
+            linksRepository.save(updateDestNodeLink.get());
         }
     }
 }

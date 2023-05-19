@@ -28,7 +28,6 @@ public class LocalNodesService {
     public Integer closestNode(Double longitude, Double latitude){
         List<LocalNodes> localNodesList= localNodesRepository.findAll();
         Integer result = null;
-
         Double distance_min = Double.MAX_VALUE;
         for (LocalNodes node: localNodesList
              ) {

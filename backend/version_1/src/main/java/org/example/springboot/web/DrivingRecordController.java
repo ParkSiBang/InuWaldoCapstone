@@ -24,6 +24,7 @@ public class DrivingRecordController {
         Integer speedingNum  = drivingRecordDto.getSpeedingNum();
         Integer accidentNum  = drivingRecordDto.getAccidentNum();
         Integer drivingDistance  = drivingRecordDto.getDrivingDistance();
+        //Integer drivingTime  = drivingRecordDto.getDrivingTime();
 
         CoordinateDto[] accidentCoordinates = drivingRecordDto.getAccidentCoordinates();
 

@@ -45,30 +45,4 @@ public class UsersResponseDto {
     private final Integer totalDrivingTime;
 
     private final Integer recentDrivingTime;
-
-    @Builder
-    public UsersResponseDto(String userId, String name, Float drivingScore, Long mileage, Integer totalDistance,
-                            Integer recentDistance, Integer totalSharpSpeedingNum, Integer totalSharpBrakingNum, Integer totalSharpCurvingNum,
-                            Integer totalSpeedingNum, Integer totalAccidentNum, Integer recentSharpSpeedingNum, Integer recentSharpBrakingNum,
-                            Integer recentSharpCurvingNum, Integer recentSpeedingNum, Integer recentAccidentNum, Integer totalDrivingTime,
-                            Integer recentDrivingTime) {
-        this.userId=userId;
-        this.name=name;
-        this.drivingScore=drivingScore;
-        this.mileage=mileage;
-        this.totalDistance = totalDistance;
-        this.recentDistance = recentDistance;
-        this.totalSharpSpeedingNum = totalSharpSpeedingNum;
-        this.totalSharpBrakingNum = totalSharpBrakingNum;
-        this.totalSharpCurvingNum = totalSharpCurvingNum;
-        this.totalSpeedingNum = totalSpeedingNum;
-        this.totalAccidentNum = totalAccidentNum;
-        this.recentSharpSpeedingNum = recentSharpSpeedingNum;
-        this.recentSharpBrakingNum = recentSharpBrakingNum;
-        this.recentSharpCurvingNum = recentSharpCurvingNum;
-        this.recentSpeedingNum = recentSpeedingNum;
-        this.recentAccidentNum = recentAccidentNum;
-        this.totalDrivingTime = totalDrivingTime;
-        this.recentDrivingTime = recentDrivingTime;
-    }
 }

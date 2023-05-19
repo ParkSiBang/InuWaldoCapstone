@@ -16,13 +16,14 @@ public class DrivingRecordDto {
     Integer speedingNum; //과속
     Integer accidentNum; //사고횟수
     Integer drivingDistance; //주행거리
+    Integer drivingTime; //주행시간
 
     CoordinateDto[] accidentCoordinates; //사고 좌표
 
     @Builder
     public DrivingRecordDto(String userId, Long mileage, Integer sharpSpeedingNum, Integer sharpBrakingNum,
                             Integer sharpCurvingNum, Integer speedingNum, Integer accidentNum,
-                            Integer drivingDistance, CoordinateDto[] accidentCoordinates){
+                            Integer drivingDistance, Integer drivingTime, CoordinateDto[] accidentCoordinates){
         this.userId = userId;
         this.mileage = mileage;
         this.sharpSpeedingNum = sharpSpeedingNum;
@@ -31,6 +32,7 @@ public class DrivingRecordDto {
         this.speedingNum = speedingNum;
         this.accidentNum = accidentNum;
         this.drivingDistance = drivingDistance;
+        this.drivingTime = drivingTime;
         this.accidentCoordinates = accidentCoordinates;
     }
 }
