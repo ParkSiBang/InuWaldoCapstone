@@ -3,6 +3,7 @@ package org.example.springboot.service.Users;
 import junit.framework.TestCase;
 import org.example.springboot.domain.users.Users;
 import org.example.springboot.domain.users.UsersRepository;
+import org.example.springboot.web.dto.DrivingRecordDto;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -28,10 +29,19 @@ public class UsersServiceTest extends TestCase {
 
     @Test
     public void 회원가입테스트() {
-
+        DrivingRecordDto drivingRecordDto = DrivingRecordDto.builder()
+                .userId("qwer")
+                .mileage(1200L)
+                .drivingDistance(12)
+                .sharpSpeedingNum(1)
+                .sharpBrakingNum(0)
+                .sharpCurvingNum(0)
+                .speedingNum(0)
+                .accidentNum(1)
+                .build();
         //given
         Users users = new Users();
-        users.setUserId("whyDBinsert");
+
         //when
         String Id = usersService.join(users);
 

@@ -30,9 +30,23 @@ public class UsersController {
             user.setUserId(usersRequestDto.getUserId());
             user.setPassword(usersRequestDto.getPassword());
             user.setName(usersRequestDto.getName());
-            user.setDrivingScore(100F); //초기 회원가입 기본값
-            user.setMileage(100L);
+            user.setDrivingScore(100F);
+            user.setMileage(0L);
             user.setTotalDistance(0);
+            user.setRecentDistance(0);
+            user.setTotalSharpSpeedingNum(0);
+            user.setTotalSharpBrakingNum(0);
+            user.setTotalSharpCurvingNum(0);
+            user.setTotalSpeedingNum(0);
+            user.setTotalAccidentNum(0);
+            user.setRecentSharpSpeedingNum(0);
+            user.setRecentSharpBrakingNum(0);
+            user.setRecentSharpCurvingNum(0);
+            user.setRecentSpeedingNum(0);
+            user.setRecentAccidentNum(0);
+            user.setTotalDrivingTime(0);
+            user.setRecentDrivingTime(0);
+
 
             usersService.join(user);
         }catch(IllegalStateException e){

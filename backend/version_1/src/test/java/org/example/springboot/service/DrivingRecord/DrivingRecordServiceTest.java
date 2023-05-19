@@ -31,14 +31,14 @@ public class DrivingRecordServiceTest extends TestCase {
                 .userId("test")
                 .mileage(1200L)
                 .sharpSpeedingNum(1)
-                .sharpBreakingNum(0)
-                .sharpCurvingNum(0)
-                .speedingNum(0)
+                .sharpBrakingNum(1)
+                .sharpCurvingNum(1)
+                .speedingNum(1)
                 .accidentNum(1)
                 .drivingDistance(12)
                 .build();
 
-        Float drivingScore = drivingRecordService.drivingScore(drivingRecordDto.getSharpSpeedingNum(), drivingRecordDto.getSharpBreakingNum(),
+        Float drivingScore = drivingRecordService.drivingScore(drivingRecordDto.getSharpSpeedingNum(), drivingRecordDto.getSharpBrakingNum(),
                 drivingRecordDto.getSharpCurvingNum(), drivingRecordDto.getSpeedingNum(), drivingRecordDto.getAccidentNum());
 
         System.out.println("운전점수테스트" + drivingScore);
@@ -47,18 +47,20 @@ public class DrivingRecordServiceTest extends TestCase {
     @Test
     public void 유저정보업데이트테스트() throws Exception {
         DrivingRecordDto drivingRecordDto = DrivingRecordDto.builder()
-                .userId("qwer")
+                .userId("joinTestplease")
                 .mileage(1200L)
+                .drivingDistance(12)
                 .sharpSpeedingNum(1)
-                .sharpBreakingNum(0)
+                .sharpBrakingNum(0)
                 .sharpCurvingNum(0)
                 .speedingNum(0)
                 .accidentNum(1)
-                .drivingDistance(12)
                 .build();
 
         Float drivingScore = 70f;
-        drivingRecordService.infoUpdate(drivingRecordDto.getUserId(), drivingRecordDto.getMileage(), drivingRecordDto.getDrivingDistance(), drivingScore);
+        drivingRecordService.infoUpdate(drivingRecordDto.getUserId(), drivingRecordDto.getMileage(), drivingRecordDto.getDrivingDistance(), drivingScore,
+                drivingRecordDto.getSharpSpeedingNum(), drivingRecordDto.getSharpBrakingNum(), drivingRecordDto.getSharpCurvingNum(),
+                drivingRecordDto.getSpeedingNum(), drivingRecordDto.getAccidentNum());
     }
 
     @Test

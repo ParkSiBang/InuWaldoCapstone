@@ -14,12 +14,12 @@ public class DrivingRecordController {
     private final DrivingRecordService drivingRecordService;
 
     @PostMapping("/record")
-    public void DrivingRecord(@RequestBody DrivingRecordDto drivingRecordDto) {
+    public String DrivingRecord(@RequestBody DrivingRecordDto drivingRecordDto) {
         String userId = drivingRecordDto.getUserId();
         Long mileage  = drivingRecordDto.getMileage();
 
         Integer sharpSpeedingNum  = drivingRecordDto.getSharpSpeedingNum();
-        Integer sharpBreakingNum  = drivingRecordDto.getSharpBreakingNum ();
+        Integer sharpBrakingNum  = drivingRecordDto.getSharpBrakingNum ();
         Integer sharpCurvingNum  = drivingRecordDto.getSharpCurvingNum();
         Integer speedingNum  = drivingRecordDto.getSpeedingNum();
         Integer accidentNum  = drivingRecordDto.getAccidentNum();
@@ -27,8 +27,11 @@ public class DrivingRecordController {
 
         CoordinateDto[] accidentCoordinates = drivingRecordDto.getAccidentCoordinates();
 
-        Float drivingScore = drivingRecordService.drivingScore(sharpSpeedingNum, sharpBreakingNum, sharpCurvingNum, speedingNum, accidentNum);
-        drivingRecordService.infoUpdate(userId, mileage, drivingDistance, drivingScore);
+        Float drivingScore = drivingRecordService.drivingScore(sharpSpeedingNum, sharpBrakingNum, sharpCurvingNum, speedingNum, accidentNum);
+        drivingRecordService.infoUpdate(userId, mileage, drivingDistance, drivingScore,sharpSpeedingNum, sharpBrakingNum, sharpCurvingNum,
+                speedingNum, accidentNum);
         drivingRecordService.linkUpdate(accidentCoordinates);
+
+        return "success";
     }
 }

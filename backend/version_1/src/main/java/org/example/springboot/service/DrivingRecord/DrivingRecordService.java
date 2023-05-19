@@ -40,25 +40,55 @@ public class DrivingRecordService {
     }
 
     //유저 정보 갱신
-    public void infoUpdate(String userId, Long mileage, Integer drivingDistance, Float DrivingScore) {
-        Optional<Users> updateUser = usersRepository.findByUserId(userId);
+    public void infoUpdate(String userId, Long mileage, Integer drivingDistance, Float DrivingScore, Integer sharpSpeedingNum, Integer sharpBrakingNum,
+                           Integer sharpCurvingNum, Integer speedingNum, Integer accidentNum) {
 
+        Optional<Users> updateUser = usersRepository.findByUserId(userId);
         //운전점수 갱신
         Integer beforeDrivingDistance = updateUser.get().getTotalDistance();
         Float beforeDrivingScore = updateUser.get().getDrivingScore();
-        Float DrivingScoreUpdate = ((beforeDrivingDistance * beforeDrivingScore) + (drivingDistance * DrivingScore)) / (beforeDrivingDistance + drivingDistance);
+        Float updateDrivingScore = ((beforeDrivingDistance * beforeDrivingScore) + (drivingDistance * DrivingScore)) / (beforeDrivingDistance + drivingDistance);
         //(기존 주행거리 x 기존 평균점수) + (새롭게 추가된 주행거리 * 새롭게 추가된 운전점수) / (총 주행거리)
-        updateUser.get().setDrivingScore(DrivingScoreUpdate);
+        updateUser.get().setDrivingScore(updateDrivingScore);
 
         //마일리지 갱신
-        Long totalMileage = updateUser.get().getMileage();
-        Long updateMileage = totalMileage + mileage;
+        Long beforeMileage = updateUser.get().getMileage();
+        Long updateMileage = beforeMileage + mileage;
         updateUser.get().setMileage(updateMileage);
-
 
         //주행거리 갱신
         Integer updateDistance = beforeDrivingDistance + drivingDistance;
         updateUser.get().setTotalDistance(updateDistance);
+
+        //사용자 급가속 변경
+        Integer beforeSharpSpeedingNum = updateUser.get().getTotalSharpSpeedingNum();
+        Integer updateSharpSpeedingNum = beforeSharpSpeedingNum + sharpSpeedingNum;
+        updateUser.get().setTotalSharpSpeedingNum(updateSharpSpeedingNum);
+        updateUser.get().setRecentSharpSpeedingNum(sharpSpeedingNum);
+
+        //사용자 급감속 변경
+        Integer beforeSharpBrakingNum = updateUser.get().getTotalSharpBrakingNum();
+        Integer updateSharpBrakingNum = beforeSharpBrakingNum + sharpBrakingNum;
+        updateUser.get().setTotalSharpBrakingNum(updateSharpBrakingNum);
+        updateUser.get().setRecentSharpBrakingNum(sharpBrakingNum);
+
+        //사용자 급커브 변경
+        Integer beforeSharpCurvingNum = updateUser.get().getTotalSharpCurvingNum();
+        Integer updateSharpCurvingNum = beforeSharpCurvingNum + sharpCurvingNum;
+        updateUser.get().setTotalSharpCurvingNum(updateSharpCurvingNum);
+        updateUser.get().setRecentSharpCurvingNum(sharpCurvingNum);
+
+        //사용자 과속 변경
+        Integer beforeSpeedingNum = updateUser.get().getTotalSpeedingNum();
+        Integer updateSpeedingNum = beforeSpeedingNum + speedingNum;
+        updateUser.get().setTotalSpeedingNum(updateSpeedingNum);
+        updateUser.get().setRecentSpeedingNum(speedingNum);
+
+        //사용자 사고횟수 변경
+        Integer beforeAccidentNum = updateUser.get().getTotalAccidentNum();
+        Integer updateAccidentNum = beforeAccidentNum + accidentNum;
+        updateUser.get().setTotalAccidentNum(updateAccidentNum);
+        updateUser.get().setRecentAccidentNum(accidentNum);
 
         usersRepository.save(updateUser.get());
     }
