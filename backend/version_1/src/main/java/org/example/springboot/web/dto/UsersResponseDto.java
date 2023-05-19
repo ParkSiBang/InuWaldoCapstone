@@ -3,47 +3,48 @@ package org.example.springboot.web.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Column;
 
 @Getter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class UsersResponseDto {
-    String userId;
+    private final String userId;
 
-    String name;
+    private final String name;
 
-    Float drivingScore;
+    private final Float drivingScore;
 
-    Long mileage;
+    private final Long mileage;
 
-    Integer totalDistance;
+    private final Integer totalDistance;
 
-    Integer recentDistance;
+    private final Integer recentDistance;
 
-    Integer totalSharpSpeedingNum;
+    private final Integer totalSharpSpeedingNum;
 
-    Integer totalSharpBrakingNum;
+    private final Integer totalSharpBrakingNum;
 
-    Integer totalSharpCurvingNum;
+    private final Integer totalSharpCurvingNum;
 
-    Integer totalSpeedingNum;
+    private final Integer totalSpeedingNum;
 
-    Integer totalAccidentNum;
+    private final Integer totalAccidentNum;
 
-    Integer recentSharpSpeedingNum;
+    private final Integer recentSharpSpeedingNum;
 
-    Integer recentSharpBrakingNum;
+    private final Integer recentSharpBrakingNum;
 
-    Integer recentSharpCurvingNum;
+    private final Integer recentSharpCurvingNum;
 
-    Integer recentSpeedingNum;
+    private final Integer recentSpeedingNum;
 
-    Integer recentAccidentNum;
+    private final Integer recentAccidentNum;
 
-    Integer totalDrivingTime;
+    private final Integer totalDrivingTime;
 
-    Integer recentDrivingTime;
+    private final Integer recentDrivingTime;
 
     @Builder
     public UsersResponseDto(String userId, String name, Float drivingScore, Long mileage, Integer totalDistance,

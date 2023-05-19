@@ -5,7 +5,6 @@ import org.example.springboot.domain.users.Users;
 import org.example.springboot.service.Users.UsersService;
 import org.example.springboot.web.dto.UsersRequestDto;
 import org.example.springboot.web.dto.UsersResponseDto;
-import org.h2.engine.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -98,28 +97,15 @@ public class UsersController {
         String userId = usersRequestDto.getUserId();
 
         Optional<Users> optional = usersService.findByUserId(userId);
-        Users FindUser = optional.get(); //Attribute가 없다면 NoSuchElementException 발생
+        Users FindUser = optional.get();
 
-        UsersResponseDto usersResponseDto = UsersResponseDto.builder()
-                .userId(FindUser.getUserId())
-                .name(FindUser.getName())
-                .drivingScore(FindUser.getDrivingScore())
-                .mileage(FindUser.getMileage())
-                .totalDistance(FindUser.getTotalDistance())
-                .recentDistance(FindUser.getRecentDistance())
-                .totalSharpSpeedingNum(FindUser.getTotalSharpSpeedingNum())
-                .totalSharpBrakingNum(FindUser.getTotalSharpBrakingNum())
-                .totalSharpCurvingNum(FindUser.getTotalSharpCurvingNum())
-                .totalSpeedingNum(FindUser.getTotalSpeedingNum())
-                .totalAccidentNum(FindUser.getTotalAccidentNum())
-                .recentSharpSpeedingNum(FindUser.getRecentSharpSpeedingNum())
-                .recentSharpBrakingNum(FindUser.getRecentSharpBrakingNum())
-                .recentSharpCurvingNum(FindUser.getRecentSharpCurvingNum())
-                .recentSpeedingNum(FindUser.getRecentSpeedingNum())
-                .recentAccidentNum(FindUser.getRecentAccidentNum())
-                .totalDrivingTime(FindUser.getTotalDrivingTime())
-                .recentDrivingTime(FindUser.getRecentDrivingTime())
-                .build();
+        UsersResponseDto usersResponseDto = new UsersResponseDto(FindUser.getUserId(), FindUser.getName(), FindUser.getDrivingScore(),
+                FindUser.getMileage(), FindUser.getTotalDistance(), FindUser.getRecentDistance(), FindUser.getTotalSharpSpeedingNum(),
+                FindUser.getTotalSharpBrakingNum(), FindUser.getTotalSharpCurvingNum(), FindUser.getTotalSpeedingNum(),
+                FindUser.getTotalAccidentNum(), FindUser.getRecentSharpSpeedingNum(), FindUser.getRecentSharpBrakingNum(),
+                FindUser.getRecentSharpCurvingNum(), FindUser.getRecentSpeedingNum(), FindUser.getRecentAccidentNum(), FindUser.getTotalDrivingTime(),
+                FindUser.getRecentDrivingTime());
+
         return usersResponseDto;
     }
 

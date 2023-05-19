@@ -67,7 +67,6 @@ public class PathController {
         ArrayList<Route> result=localNodesService.insertCoordinate(fastest,drivingScore);
         PathResponseDto response = new PathResponseDto(result);
 
-
         return response;
     }
     @PostMapping("/test")
@@ -81,8 +80,4 @@ public class PathController {
 
         return response;
     }
-
-
-
-
 }
