@@ -3,10 +3,12 @@ package org.example.springboot.domain.links;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 
@@ -36,8 +38,6 @@ public class Links {
 
     @Column
     private Integer crossWalk;
-
-
 
     @Builder
     public Links(Integer startNode, Integer destNode, Integer childrenZone, Integer accidentNum

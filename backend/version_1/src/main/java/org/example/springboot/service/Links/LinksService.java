@@ -3,6 +3,8 @@ package org.example.springboot.service.Links;
 import lombok.RequiredArgsConstructor;
 import org.example.springboot.domain.links.Links;
 import org.example.springboot.domain.links.LinksRepository;
+import org.example.springboot.domain.localNodes.LocalNodesRepository;
+import org.example.springboot.domain.users.Users;
 import org.example.springboot.service.LocalNodes.Route;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class LinksService {
     private final LinksRepository linksRepository;
+    private final LocalNodesRepository localNodesRepository;
     public Queue<Links> getAll(){
         Queue<Links> result = new LinkedList<>();
         List<Links> links = linksRepository.findAll();
@@ -146,8 +149,30 @@ public class LinksService {
         //
 
         return linksQueue;
-
     }
 
+    public void accidentNumIncrease(int nodeId) {
+        List<Links> linkIdList = new ArrayList<>();
 
+        linkIdList = linksRepository.findAllByStartNode(nodeId);
+
+        for(int i = 0; i<linkIdList.size(); i++){
+            Optional<Links> updateLink = linksRepository.findById(linkIdList.get(i).getId());
+            int AccidentNum = updateLink.get().getAccidentNum();
+            AccidentNum = AccidentNum + 1;
+            updateLink.get().setAccidentNum(AccidentNum);
+            linksRepository.save(updateLink.get());
+        }
+
+        linkIdList = linksRepository.findAllByDestNode(nodeId);
+
+        for(int i = 0; i<linkIdList.size(); i++){
+            Optional<Links> updateLink = linksRepository.findById(linkIdList.get(i).getId());
+            int AccidentNum = updateLink.get().getAccidentNum();
+            AccidentNum = AccidentNum + 1;
+            updateLink.get().setAccidentNum(AccidentNum);
+            System.out.println(updateLink.get().getId());
+            linksRepository.save(updateLink.get());
+        }
+    }
 }

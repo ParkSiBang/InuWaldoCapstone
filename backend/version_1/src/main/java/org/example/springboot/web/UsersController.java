@@ -32,7 +32,7 @@ public class UsersController {
             user.setName(usersRequestDto.getName());
             user.setDrivingScore(100F); //초기 회원가입 기본값
             user.setMileage(100L);
-            user.setTotalDistance(0F);
+            user.setTotalDistance(0);
 
             usersService.join(user);
         }catch(IllegalStateException e){
@@ -80,14 +80,13 @@ public class UsersController {
 
     //유저정보조회
     @PostMapping("/userInfo")
-    public UsersResponseDto FindUserInfo(@RequestBody UsersRequestDto usersRequestDto, HttpSession session) {
+    public UsersResponseDto FindUserInfo(HttpSession session) {
         String userId = (String) session.getAttribute("userId");
         Optional<Users> optional = usersService.findByUserId(userId);
         Users FindUser = optional.get(); //Attribute가 없다면 NoSuchElementException 발생
 
         UsersResponseDto usersResponseDto = UsersResponseDto.builder()
                 .userId(FindUser.getUserId())
-                .password(FindUser.getPassword())
                 .name(FindUser.getName())
                 .drivingScore(FindUser.getDrivingScore())
                 .mileage(FindUser.getMileage())
@@ -96,6 +95,7 @@ public class UsersController {
 
         return usersResponseDto;
     }
+
     @PostMapping("/isLogin")
     public String isLogin(@RequestBody UsersRequestDto usersRequestDto, HttpSession session) {
 

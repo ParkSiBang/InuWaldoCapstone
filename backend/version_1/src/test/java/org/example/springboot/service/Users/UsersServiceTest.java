@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
 public class UsersServiceTest extends TestCase {
 
     @Autowired
@@ -32,7 +31,7 @@ public class UsersServiceTest extends TestCase {
 
         //given
         Users users = new Users();
-        users.setUserId("joinTest");
+        users.setUserId("whyDBinsert");
         //when
         String Id = usersService.join(users);
 

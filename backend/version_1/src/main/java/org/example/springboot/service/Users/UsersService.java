@@ -44,6 +44,7 @@ public class UsersService {
 
     public Optional<Users> findByUserId(String userId){return usersRepository.findByUserId(userId);
     }
+
     public List<Users> findUsers() {return usersRepository.findAll();
     }
 }

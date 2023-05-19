@@ -3,22 +3,34 @@ package org.example.springboot.web.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-
 public class DrivingRecordDto {
-    Integer doubling; //급회전
-    Integer suddenDrive; //급가속+급감속
-    Integer fallDown; //넘어짐
-    Integer speeding; //과속
+    String userId; //유저아이디
+    Long mileage; //과속
+
+    Integer sharpSpeedingNum; //급가속
+    Integer sharpBreakingNum; //금감속
+    Integer sharpCurvingNum; //급커브
+    Integer speedingNum; //과속
+    Integer accidentNum; //사고횟수
+    Integer drivingDistance; //주행거리
+
+    CoordinateDto[] accidentCoordinates; //사고 좌표
 
     @Builder
-    public DrivingRecordDto(Integer doubling, Integer suddenDrive, Integer fallDown, Integer speeding){
-        this.doubling = doubling;
-        this.suddenDrive = suddenDrive;
-        this.fallDown = fallDown;
-        this.speeding = speeding;
+    public DrivingRecordDto(String userId, Long mileage, Integer sharpSpeedingNum, Integer sharpBreakingNum,
+                            Integer sharpCurvingNum, Integer speedingNum, Integer accidentNum,
+                            Integer drivingDistance, CoordinateDto[] accidentCoordinates){
+        this.userId = userId;
+        this.mileage = mileage;
+        this.sharpSpeedingNum = sharpSpeedingNum;
+        this.sharpBreakingNum = sharpBreakingNum;
+        this.sharpCurvingNum = sharpCurvingNum;
+        this.speedingNum = speedingNum;
+        this.accidentNum = accidentNum;
+        this.drivingDistance = drivingDistance;
+        this.accidentCoordinates = accidentCoordinates;
     }
 }

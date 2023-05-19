@@ -17,10 +17,10 @@ public class UsersResponseDto {
 
     Long mileage;
 
-    Float totalDistance;
+    Integer totalDistance;
 
     @Builder
-    public UsersResponseDto(String userId, String password, String name, Float drivingScore, Long mileage, Float totalDistance){
+    public UsersResponseDto(String userId, String password, String name, Float drivingScore, Long mileage, Integer totalDistance){
         this.userId=userId;
         this.password=password;
         this.name=name;

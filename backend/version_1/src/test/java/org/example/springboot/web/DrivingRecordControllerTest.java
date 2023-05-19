@@ -26,10 +26,7 @@ public class DrivingRecordControllerTest extends TestCase {
     @Test
     public void 운전기록컨트롤러테스트() throws Exception {
         DrivingRecordDto drivingRecordDto = DrivingRecordDto.builder()
-                .doubling(0)
-                .suddenDrive(0)
-                .fallDown(1)
-                .speeding(0)
+
                 .build();
 
         String url="http://localhost:" + port + "/record";
