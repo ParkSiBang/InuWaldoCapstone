@@ -256,12 +256,17 @@ export default function FreeMap({navigation,route}) {
                 var array = [];
                 
                 var path = response.data.fastestPath;
-                
+                var totalScore=0
                 path.map(route=>{
-                    array = [...array,{latitude: route.startLatitude,longitude:route.startLongitude}];
-                    array = [...array,{latitude: route.destLatitude,longitude:route.destLongitude}];
+                    console.log(route)
+                    let color ="#0080FF"
+                    totalScore+=route.score;
+                    if(route.childrenZone) {color = "yellow"}
+                    else if(route.crossWalk) {color = "green"}
+                    
+                    array = [...array,{coord : [{latitude: route.startLatitude,longitude:route.startLongitude},{latitude: route.destLatitude,longitude:route.destLongitude}], color:color,score:route.score}];
                 })
-                console.log(array);
+                console.log(totalScore);
                 setNaviMode({routes:array,checkMode:true});
             }
 
@@ -364,13 +369,33 @@ export default function FreeMap({navigation,route}) {
                 {
                     destination ? <Marker  coordinate={destination.coords} pinColor={destination.pinColor}/> : null
                 }
-                <Polyline
+                {
+                   
+                   naviMode.routes && naviMode.routes.map((l,index)=>{
+                       return(<Polyline
+                       key={index}
+                   coordinates={l.coord}
+                   strokeColor={l.color}
+                   strokeWidth={6}
+                   onPress={()=>console.log(l)}
+                   tappable={true}
+                   />);
+
+                   }
+                   )
+                   
+               }
+               {
+                /*<Polyline
                 strokeColor="#0080FF" // fallback for when `strokeColors` is not supported by the map-provider
                 
                 strokeWidth={6}
                 coordinates={naviMode.routes}
                 >
                 </Polyline>
+                */
+               }
+                
                 <Polyline
                     coordinates={coordinates}
                     strokeColor="#6E6E6E"

@@ -67,6 +67,8 @@ public class LocalNodesService {
             Integer d= l.getDestNode();
             boolean childZone=false;
             if(l.getChildrenZone() != 0) childZone=true;
+            boolean crossWalk=false;
+            if(l.getCrossWalk() != 0) crossWalk=true;
             LocalNodes sNode=localNodesRepository.findByNodeId(s).get();
             LocalNodes dNode=localNodesRepository.findByNodeId(d).get();
             Double score = linksService.weightBySafe(l,drivingScore);
@@ -78,6 +80,7 @@ public class LocalNodesService {
                     .childZone(childZone)
                     .accidentNum(l.getAccidentNum())
                     .carEntranceNum(l.getCarEntranceNum())
+                    .crossWalk(crossWalk)
                     .score(score)
                     .build();
             result.add(0,r);
