@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, View, Text, Image, Alert } from 'react-native';
 import {Signup, profileName} from './Signup'
 import styled from 'styled-components/native';
@@ -24,6 +24,24 @@ const Text_Welcome = styled.Text`
 
 const Profile = ({navigation, route}) => {
     const email = route.params.email;
+
+    const [data, setData]=useState({
+        name : []
+    });
+    
+    const backDownload = async () => {
+        try {
+            const response = await axios.post(SERVER_ADDRESS + '/userInfo', {
+                userId: route.params.email,
+            });
+            setData(response.data)
+        }
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('Data Error', error.message)
+        }
+    }
+    
     const reqLogin = async () => {
         try {
             console.log(route.params)
@@ -51,6 +69,7 @@ const Profile = ({navigation, route}) => {
 
     useEffect(()=>{
         reqLogin(); //페이지 시작 시 로그인 검증
+        backDownload();
     },[]);
 
     return (

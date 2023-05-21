@@ -57,6 +57,7 @@ public class DrivingRecordService {
         updateUser.get().setMileage(updateMileage);
 
         //주행거리 갱신
+        updateUser.get().setRecentDistance(drivingDistance);
         Integer updateDistance = beforeDrivingDistance + drivingDistance;
         updateUser.get().setTotalDistance(updateDistance);
 

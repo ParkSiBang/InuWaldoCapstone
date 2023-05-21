@@ -48,26 +48,30 @@ const MapResult = ({navigation, route}) => {
     //speedingNum sharpCurvingNum accidentNum drivingDistance sharpSpeedingNum
     // 마일리지 최종값
 
-    const [data, setData]=useState({
-        drivingDistance: 0,
-        speedingNum: 0,
-        sharpSpeedingNum: 0,
-        accidentNum: 0,
-        sharpCurvingNum: 0,
-        sharpBrakingNum: 0,
-        ResultMile: 0,
-    });
 
-    setData
+    // 백엔드 데이터 연동
+    // const [data, setData]=useState({
+    //     drivingDistance: 0,
+    //     speedingNum: 0,
+    //     sharpSpeedingNum: 0,
+    //     accidentNum: 0,
+    //     sharpCurvingNum: 0,
+    //     sharpBrakingNum: 0,
+    //     ResultMile: 0,
+    // });
+
+    // setData(response.data)
+    // data.drivingDistance
 
     console.log("측정 끝 최종 결과");
     
     console.log(route.params)
 
-    let ResultMile = route.params.drivingDistance - route.params.speedingNum*100 - route.params.sharpSpeedingNum*10 
+    let ResultMile = route.params.drivingDistance - route.params.speedingNum*10 - route.params.sharpSpeedingNum*10 
     - route.params.accidentNum*50 - route.params.sharpCurvingNum*10 - route.params.sharpBrakingNum*10;
 
     const email=route.params.email;
+    
     const reqLogin = async () => {
         try {
             console.log(route.params)
@@ -96,20 +100,22 @@ const MapResult = ({navigation, route}) => {
     const handleOnpress = async () => {
         try {
             console.log(route.params)
-            const response = await axios.post(SERVER_ADDRESS + '/isLogin', {
+            const response = await axios.post(SERVER_ADDRESS + '/record', {
+                userId: route.params.email,
                 drivingDistance: route.params.drivingDistance, 
                 speedingNum: route.params.speedingNum, 
                 sharpSpeedingNum: route.params.sharpSpeedingNum,
                 accidentNum: route.params.accidentNum,
                 sharpCurvingNum: route.params.sharpCurvingNum,
                 sharpBrakingNum: route.params.sharpBrakingNum,
-                ResultMile: ResultMile,
+                mileage: ResultMile,
+                accidentCoordinates: route.params.accidentCoordinates,
         });
             console.log(response.data);
             if(response.data == "success"){
                 //성공 시 통과
-               console.log("로그인 검증 성공");
-                
+               console.log("데이터 전송 성공");
+               navigation.navigate('UserPage', {email});
             }
             else{ 
                 //실패시
@@ -157,11 +163,12 @@ const MapResult = ({navigation, route}) => {
                             }
                         </Text_Normal>
                         <Text_Normal>  {route.params.speedingNum >=1 && '과속('+route.params.speedingNum+')'}  
-                                {route.params.sharpSpeedingNum >=1 && '급변속('+route.params.sharpSpeedingNum+')'}  
+                                {route.params.sharpSpeedingNum >=1 && ' 급가속('+route.params.sharpSpeedingNum+')'}  
                         </Text_Normal>
                         <Text_Normal> 
                             {route.params.sharpCurvingNum >= 1&& '  급회전('+route.params.sharpCurvingNum+')'} 
                             {route.params.accidentNum >= 1&& '  사고('+route.params.accidentNum+')'} 
+                            {route.params.sharpBrakingNum >= 1&& '  급감속('+route.params.sharpBrakingNum+')'}
                         </Text_Normal>
                     </View>
                 </View>
@@ -179,6 +186,7 @@ const MapResult = ({navigation, route}) => {
                         <Text_Normal>   {route.params.sharpSpeedingNum >= 1 && '-'+route.params.sharpSpeedingNum*10}</Text_Normal>
                         <Text_Normal>   {route.params.sharpCurvingNum >= 1 && '-'+route.params.sharpCurvingNum*10}</Text_Normal>
                         <Text_Normal>   {route.params.accidentNum  >= 1 && '-'+route.params.accidentNum*50}</Text_Normal>
+                        <Text_Normal>   {route.params.sharpBrakingNum  >= 1 && '-'+route.params.sharpBrakingNum*10}</Text_Normal>
                         </View>
                     </View>
 
@@ -190,14 +198,9 @@ const MapResult = ({navigation, route}) => {
                     <View style={{ marginTop: 20,  marginRight: 100, marginLeft: 100}}>
                         <Button 
                             title="적립" 
-                            onPress={() => navigation.navigate('UserPage', {
-                                // drivingDistance: route.params.drivingDistance, 
-                                // speedingNum: route.params.speedingNum, 
-                                // sharpSpeedingNum: route.params.sharpSpeedingNum,
-                                // accidentNum: route.params.accidentNum,
-                                // sharpCurvingNum: route.params.sharpCurvingNum,
-                                email,
-                            })}
+                            onPress={
+                                handleOnpress
+                            }
                             textStyle={{fontSize: 18,}}
                         />
                 </View>

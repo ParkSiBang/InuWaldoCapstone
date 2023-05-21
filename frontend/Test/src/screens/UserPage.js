@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { StatusBar, View, Text, Image, Alert} from 'react-native';
 import {Map, Signup} from './'
-import styled from 'styled-components/native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, Card } from '@rneui/themed';
@@ -13,14 +12,46 @@ import Icon1 from 'react-native-vector-icons/Foundation';
 const Tab = createBottomTabNavigator();
 
 const UserPage = ({navigation, route}) => {
-    console.log(11)
-    console.log(route.params)
-    console.log('!' + route.params.email)
+    
+    console.log('userpage');
 
+    // 여기서 부터 복붙해서 
     const email = route.params.email;
+
+    const [data, setData]=useState({
+        drivingScore: 0,
+        recentSpeedingNum: 0,
+        recentSharpSpeedingNum: 0,
+        recentAccidentNum: 0,
+        recentSharpCurvingNum: 0,
+        recentSharpBrakingNum: 0,
+        mileage: 0,
+        recentDistance: 0,
+        totalDistance: 0,
+        totalSpeedingNum: 0,
+        totalSharpSpeedingNum: 0,
+        totalAccidentNum: 0,
+        totalSharpCurvingNum: 0,
+        totalSharpBrakingNum: 0,
+    });
+
+    const backDownload = async () => {
+        try {
+            const response = await axios.post(SERVER_ADDRESS + '/userInfo', {
+                userId: route.params.email,
+            });
+            setData(response.data)
+        }
+        catch (error) {
+            //실패시 경고 출력
+            Alert.alert('Data Error', error.message)
+        }
+    }
+
+    console.log(data)
+
     const reqLogin = async () => {
         try {
-            console.log(route.params)
             const response = await axios.post(SERVER_ADDRESS + '/isLogin', {
                userId: route.params.email,
             });
@@ -45,12 +76,13 @@ const UserPage = ({navigation, route}) => {
 
     useEffect(()=>{
         reqLogin(); //페이지 시작 시 로그인 검증
+        backDownload();
     },[]);
 
-    return (
+    // 백엔드 데이터 낱개 출력
+    console.log('distance :' + data.recentDistance)
 
-        console.log(route.params.sharpSpeedingNum),
-        console.log(route.params.accidentNum),
+    return (
         <View style={{flex:1}}>
             {/* 내 운전 점수 출력 및 '자세히 보기' 버튼 */}
 
@@ -76,7 +108,7 @@ const UserPage = ({navigation, route}) => {
                         fontSize: 50,
                         color: '#000000'
                     }}>
-                        92점
+                        {data.drivingScore}
                     </Text>
 
                 </View>
@@ -159,15 +191,17 @@ const UserPage = ({navigation, route}) => {
                             color: '#BDBDBD'
                         }}
                     >
-                        5월 8일 10시 39분 출발 | {route.params.drivingDistance}km 주행 | 총 39분
+                        5월 26일 | {data.recentDistance}m 주행 
                     </Text>
 
                     {/* 잘 주행할 때 띄워주는 Card */}
 
-                    { route.params.speedingNum === 0 &&
-                      route.params.speedingNum === 0 &&
-                      route.params.sharpCurvingNum === 0 &&
-                      route.params.accidentNum === 0 &&
+                    { data.recentSharpSpeedingNum === 0 &&
+                      data.recentSpeedingNum === 0 &&
+                      data.recentSharpCurvingNum === 0 &&
+                      data.recentAccidentNum === 0 &&
+                      data.recentSharpBrakingNum === 0 &&
+                      
                         <Card
                             // containerStyle={{
                             //     alignItems: 'center',
@@ -200,7 +234,7 @@ const UserPage = ({navigation, route}) => {
                         }}>
 
                         {/* 과속 Card */}
-                        {route.params.speedingNum > 0 &&
+                        {data.recentSpeedingNum > 0 &&
                             <Card
                                 containerStyle={{
                                     alignItems: 'center',
@@ -221,18 +255,18 @@ const UserPage = ({navigation, route}) => {
                                     fontWeight: 500,
                                     color: '#1C1C1C',
                                 }}
-                            >과속 | {route.params.speedingNum} </Text>
+                            >과속 | {data.recentSpeedingNum} </Text>
                             </Card>
                         }
 
-                        {/* 급변속 Card */}
+                        {/* 급가속 Card */}
 
-                        {route.params.sharpSpeedingNum > 0 &&
+                        {data.recentSharpSpeedingNum > 0 &&
                             <Card
                                 containerStyle={{
                                     alignItems: 'center',
                                     height: 24,
-                                    width: 66,
+                                    width: 57,
                                     padding: 2,
                                     borderRadius: 6,
                                     backgroundColor: '#F78181',
@@ -248,11 +282,38 @@ const UserPage = ({navigation, route}) => {
                                     fontWeight: 500,
                                     color: '#1C1C1C',
                                 }}
-                            >급변속 | {route.params.sharpSpeedingNum} </Text>
+                            >급가속 | {data.recentSharpSpeedingNum} </Text>
                                 </Card>
                         }
 
-                        {route.params.sharpCurvingNum > 0 &&
+                        {/* 급감속 Card */}
+
+                        {data.recentSharpBrakingNum > 0 &&
+                            <Card
+                                containerStyle={{
+                                    alignItems: 'center',
+                                    height: 24,
+                                    width: 57,
+                                    padding: 2,
+                                    borderRadius: 6,
+                                    backgroundColor: '#F78181',
+                                    marginTop: 12,
+                                    marginLeft: 1,
+                                    marginRight: 6,
+                                }}   
+                            >
+                            <Text
+                                style={{
+                                    fontSize: 10, 
+                                    padding: 1,
+                                    fontWeight: 500,
+                                    color: '#1C1C1C',
+                                }}
+                            >급감속 | {data.recentSharpBrakingNum} </Text>
+                                </Card>
+                        }
+
+                        {data.recentSharpCurvingNum > 0 &&
                             <Card
                                 containerStyle={{
                                     alignItems: 'center',
@@ -272,13 +333,13 @@ const UserPage = ({navigation, route}) => {
                                         fontWeight: 500,
                                         color: '#1C1C1C',
                                     }}
-                                >급회전 | {route.params.sharpCurvingNum} </Text>
+                                >급회전 | {data.recentSharpCurvingNum} </Text>
                             </Card>
                         }
 
                         {/* 사고 Card */}
 
-                        {route.params.accidentNum > 0 &&
+                        {data.recentAccidentNum > 0 &&
                             <Card
                                 containerStyle={{
                                     alignItems: 'center',
@@ -298,11 +359,9 @@ const UserPage = ({navigation, route}) => {
                                         fontWeight: 500,
                                         color: '#1C1C1C',
                                     }}
-                                >사고 | {route.params.accidentNum} </Text>
+                                >사고 | {data.recentAccidentNum} </Text>
                             </Card>
                         }
-
-                        {/* 급회전 Card */}
 
                               
                     </View>
@@ -362,7 +421,7 @@ const UserPage = ({navigation, route}) => {
                                     //paddingBottom: 20,
                                     color: '#000000'
                                 }}
-                            >1,050 원</Text>
+                            >{data.mileage} 원</Text>
                         </View>
                     </View>
                 </Card>

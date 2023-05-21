@@ -28,9 +28,9 @@ public class UsersControllerTest extends TestCase {
     @Test
     public void 유저컨트롤러_회원가입테스트() throws Exception {
         UsersRequestDto usersRequestDto = UsersRequestDto.builder()
-                .userId("joinTestplease")
-                .password("joinTest5678please")
-                .name("joinTestplease")
+                .userId("Test")
+                .password("qwe123")
+                .name("Test")
                 .build();
 
         String url="http://localhost:" + port + "/join";
