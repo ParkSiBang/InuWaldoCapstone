@@ -184,9 +184,9 @@ const MapResult = ({navigation, route}) => {
                         <Text_Normal >   +{route.params.drivingDistance}</Text_Normal>
                         <Text_Normal>   {route.params.speedingNum >= 1 && '-'+route.params.speedingNum*10}</Text_Normal>
                         <Text_Normal>   {route.params.sharpSpeedingNum >= 1 && '-'+route.params.sharpSpeedingNum*10}</Text_Normal>
+                        <Text_Normal>   {route.params.sharpBrakingNum  >= 1 && '-'+route.params.sharpBrakingNum*10}</Text_Normal>
                         <Text_Normal>   {route.params.sharpCurvingNum >= 1 && '-'+route.params.sharpCurvingNum*10}</Text_Normal>
                         <Text_Normal>   {route.params.accidentNum  >= 1 && '-'+route.params.accidentNum*50}</Text_Normal>
-                        <Text_Normal>   {route.params.sharpBrakingNum  >= 1 && '-'+route.params.sharpBrakingNum*10}</Text_Normal>
                         </View>
                     </View>
 

@@ -56,14 +56,14 @@ const Auth = () => {
                 component={UserPage}  
                 options={{headerShown: false}} 
             />
-            <Stack.Screen 
-                name="RecentRecord" 
-                component={RecentRecord}  
-            />
             <Stack.Screen
                 name="FreeMap"
                 component={FreeMap}
                 options={{headerShown: false}} 
+            />
+            <Stack.Screen 
+                name="RecentRecord" 
+                component={RecentRecord}  
             />
         </Stack.Navigator>
     );

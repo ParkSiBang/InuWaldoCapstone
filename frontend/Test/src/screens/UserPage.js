@@ -3,17 +3,30 @@ import { StatusBar, View, Text, Image, Alert} from 'react-native';
 import {Map, Signup} from './'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button, Card } from '@rneui/themed';
+import { Button, Card, Dialog } from '@rneui/themed';
 import axios from 'axios';
 import { SERVER_ADDRESS } from '../../global';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/Foundation';
+import Icon2 from 'react-native-vector-icons/Octicons';
 
 const Tab = createBottomTabNavigator();
 
-const UserPage = ({navigation, route}) => {
+const UserPage : React.FunctionComponent<DialogComponentProps> = ({navigation, route}) => {
     
     console.log('userpage');
+
+    const [visible1, setVisible1] = useState(false);
+    const [visible2, setVisible2] = useState(false);
+    const [checked, setChecked] = useState(1);
+
+    const toggleDialog1 = () => {
+        setVisible1(!visible1);
+    };
+
+    const toggleDialog2 = () => {
+        setVisible2(!visible2);
+    };
 
     // 여기서 부터 복붙해서 
     const email = route.params.email;
@@ -108,7 +121,7 @@ const UserPage = ({navigation, route}) => {
                         fontSize: 50,
                         color: '#000000'
                     }}>
-                        {data.drivingScore}
+                        {parseInt(data.drivingScore)}
                     </Text>
 
                 </View>
@@ -159,21 +172,60 @@ const UserPage = ({navigation, route}) => {
                         <Button  
                             type="clear"
                             containerStyle={{
-                                height: 34,
-                                width: 37,
+                                height: 40,
+                                width: 40,
                             }}
                             style={{paddingBottom: 20}}
                             alignItems= 'right'
-                            onPress={() => navigation.navigate('RecentRecord')}
+                            onPress={toggleDialog1}
                         >
-                            <Icon name="ios-arrow-down" size={20}/>
+                            <Icon2 name="question" style={{color: '#0080FF'}}size={20}/>
                         </Button>
+
+                        {/* 급감속 Dialog */}
+
+                        { data.recentSharpBrakingNum > 0 &&
+
+                            <Dialog
+                                isVisible={visible1}
+                                onBackdropPress={toggleDialog1}
+                                borderRadius= '10'
+                                >
+                                <Dialog.Title title="급감속이 감지됐어요" titleStyle={{ color: 'black' }}/>
+
+                                <View style={{ marginBottom: 10, borderBottomColor: 'black', borderBottomWidth: 1,}}/>
+                                
+                                <View style={{flexDirection: 'row', }}>
+                                    <Image
+                                        style={{width: 113, height: 113, marginRight: 3, }}
+                                        source={require('Test/assets/images/beforeBraking.jpg')}/>
+                                    <Image
+                                        style={{width: 113, height: 113, }}
+                                        source={require('Test/assets/images/afterBraking.jpg')}/>
+                                </View>
+
+                                <View style={{ marginTop: 10 ,marginBottom: 10, borderBottomColor: 'black', borderBottomWidth: 1,}}/>
+
+                                <View style={{flexDirection: 'row', }}>
+                                    <Text style={{fontWeight: 'bold', color: 'black',}}>1. </Text>
+                                    <Text style={{fontWeight: 'bold', color: 'black',}}>저속주행을 하면서  항상 주변을 둘러보  세요.</Text>
+                                </View>
+                                <View style={{flexDirection: 'row', marginTop: 10,}}>
+                                    <Text style={{fontWeight: 'bold', color: 'black',}}>2. </Text>
+                                    <Text style={{fontWeight: 'bold', color: 'black',}}>브레이크를 천천히 눌러주세요.</Text>
+                                </View>
+                                <View style={{flexDirection: 'row', marginTop: 10,}}>
+                                    <Text style={{fontWeight: 'bold', color: 'black',}}>3. </Text>
+                                    <Text style={{fontWeight: 'bold', color: 'black',}}>거리가 충분하다면, 가속 버튼을 누르지  않는 것만으로도 속도는 줄어들어요.</Text>
+                                </View> 
+                            </Dialog>
+                        }
                     </View>
                     <Card.Divider color={'#585858'}/>
 
                     {/* 도착 지점 */}
 
-                    <Text
+                    {/* <Text
                         
                         style={{fontSize: 16,
                             color: '#000000'
@@ -181,14 +233,15 @@ const UserPage = ({navigation, route}) => {
                         }}
                     >
                         인천대학교 송도캠퍼스
-                    </Text>
+                    </Text> */}
 
                     {/* 주행한 날짜 | 주행 거리 | 주행 시간 */}
 
                     <Text
                         style={{
                             fontSize: 12,
-                            color: '#BDBDBD'
+                            // color: '#BDBDBD'
+                            color: 'black'
                         }}
                     >
                         5월 26일 | {data.recentDistance}m 주행 
@@ -399,7 +452,7 @@ const UserPage = ({navigation, route}) => {
                             }}
                             style={{paddingBottom: 20}}
                             alignItems= 'right'
-                            onPress={() => navigation.navigate('RecentRecord')}
+                            //onPress={() => navigation.navigate('RecentRecord')}
                         >
                             <Icon name="ios-arrow-down" size={20}/>
                         </Button>

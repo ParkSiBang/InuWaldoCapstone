@@ -70,40 +70,9 @@ const Signin = ({navigation}) => {
 
         catch (error) {
             //실패시 경고 출력
-            Alert.alert('sigining Error', e.message)
+            Alert.alert('sigining Error', error.message)
         }
     }
-
-
-    // email과 password 확인 후, 이상없으면 profile 화면으로 이동
-   // const  _handleSigninBtnPress= async () => {
-        
-        // signin은 firebase에서 규명, 백엔드 연동시 참조
-
-        // try{
-        //     const user= await signin({email, password});
-        //     navigation.navigate('Profile', {user});
-        // } catch (e) {
-        //     Alert.alert('Signin Error', e.message)
-        // }
-
-        // 이메일 비밀번호 간단히 확인
-        // 현재 이메일 비번 : jobob981218@gmail.com / sun981218
-
-        // if (email == 'jobob981218@gmail.com'){
-        //     if (password == 'sun981218'){
-        //         navigation.navigate('Profile', {email, password});
-        //     }
-        //     else {
-        //         alert('비밀번호 틀림');
-        //     }
-        // }
-        // else {
-        //     alert('이메일 틀림');
-        // }
-
-        //navigation.navigate('Profile', {email, password});
-    //};
 
     return (
         <KeyboardAwareScrollView 

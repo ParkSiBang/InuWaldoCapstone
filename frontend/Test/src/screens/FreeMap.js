@@ -108,19 +108,19 @@ export default function FreeMap({navigation,route}) {
                 const nowSpeed= (newDistance/timeDiff)*3600; //km/hr
                 const speedDiff = (speed-nowSpeed)*(1000/timeDiff); //초당 속도변화량
                 if(prevTimestamp){
-                    if(nowSpeed>25) {
+                    if(nowSpeed>20) {
                         setSpeedMessage(true);
                         setTimeout(()=>{setSpeedMessage(false)},3000);
                         console.log("과속 감지! " + nowSpeed);
                         setSpeedingNum(speedingNum => speedingNum +1 );
                     }
-                    if(speedDiff >= 5){ //1초에 5km/hr 증가
+                    if(speedDiff <= -3.8 && spdRef.current > 5){ //1초에 5km/hr 증가
                         setAccMessage(true);
                         setTimeout(()=>{setAccMessage(false);},3000);
                         console.log("급가속 감지! "+ speedDiff);
                         setSharpSpeedingNum(sharpSpeedingNum => sharpSpeedingNum + 1)
                     }
-                    if(speedDiff <= -5){ //1초에 5km/hr 감소
+                    if(speedDiff >= 3.8 && spdRef.current > 5){ //1초에 5km/hr 감소
                         setBrkMessage(true);
                         setTimeout(()=>{setBrkMessage(false);},3000);
                         console.log("급감속 감지! "+ speedDiff);
@@ -175,7 +175,7 @@ export default function FreeMap({navigation,route}) {
                     //     console.log('사고 감지!(급가속): '+ (prevAcc-nowAcc));
                     //     setAccidentNum(accidentNum  => accidentNum + 1);
                     //}
-                    if(prevAcc + 20 < nowAcc){
+                    if(prevAcc + 40 < nowAcc){
                         setAccidentMessage(true);
                         setTimeout(()=>{setAccidentMessage(false);},3000);
                         console.log('사고 감지!(급가속): '+ (prevAcc-nowAcc));
@@ -199,7 +199,7 @@ export default function FreeMap({navigation,route}) {
                         console.log('급커브 감지!: '+rotate);
 
                         setSharpCurvingNum(sharpCurvingNum => sharpCurvingNum + 1);
-                    }else if(rotate >= 250){
+                    }else if(rotate >= 2000){
                         setAccidentMessage(true);
                         setTimeout(()=>{setAccidentMessage(false);},3000);
                         console.log('사고 감지!(급커브): '+rotate);
@@ -419,7 +419,7 @@ export default function FreeMap({navigation,route}) {
                     }}
                 >
                     <Button
-                        title="시작"
+                        title="주행 시작"
                         buttonStyle={{
                             backgroundColor : 'rgba(111, 202, 186, 1)',
                             borderRadius: 5,

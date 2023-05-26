@@ -26,15 +26,15 @@ public class DrivingRecordService {
 
         //점수 생성 공식
         if (sharpSpeedingNum > 0) //급가속 -10점
-            DrivingScore -= 10;
+            DrivingScore -= 5;
         if (sharpBreakingNum > 0) //급감속 -10점
-            DrivingScore -= 10;
+            DrivingScore -= 5;
         if (sharpCurvingNum > 0) //급커드 -10점
-            DrivingScore -= 10;
+            DrivingScore -= 5;
         if (speedingNum > 0) //과속 -10점
-            DrivingScore -= 10;
+            DrivingScore -= 5;
         if (accidentNum > 0) //사고횟수 -20점
-            DrivingScore -= 20;
+            DrivingScore -= 10;
 
         return DrivingScore;
     }

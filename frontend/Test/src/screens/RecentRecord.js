@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState}from 'react';
 import { StatusBar, View, Text, Image } from 'react-native';
 import {Signup, profileName} from './Signup'
 import styled from 'styled-components/native';

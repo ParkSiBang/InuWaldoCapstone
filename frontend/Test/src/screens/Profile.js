@@ -89,7 +89,7 @@ const Profile = ({navigation, route}) => {
                 }}
             >
                 <Button
-                    title="자율 주행"
+                    title="자유 주행"
                     buttonStyle={{
                         borderRadius: 3,
                         margin: 20,
@@ -103,7 +103,7 @@ const Profile = ({navigation, route}) => {
                     onPress={() => navigation.navigate('FreeMap', {email} )}
                 />
                 <Button
-                    title={'길찾기'}
+                    title={'경로 안내'}
                     buttonStyle={{
                         borderRadius: 3,
                         margin: 20,
