@@ -407,4 +407,12 @@ https://smartstore.naver.com/biclo_outlet/products/4151451886?<br>
 토의 내용<br>
 1. Test 토대로 부족한 점 피드백 및 수정<br>
 2. 발표 준비<br>
-4.  5/20(토) 킥보드 마스터 최종 Test<br>
+3.  5/20(토) 킥보드 마스터 최종 Test<br>
+
+<br> 킥보드 마스터 금상<br/>
+
+# 6/5 회의
+참여자: 조보겸, 김정우, 박시현<br>
+<br/>
+토의 내용<br>
+1. 기여도 작성
