@@ -32,7 +32,6 @@
 
 ## 📸 작품 시연
 ![메인 화면](https://github.com/user-attachments/assets/891d0ad8-680f-4167-af98-01dee6f12bae)
-&emsp;&emsp;**메인 화면** &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| **안전한 경로 안내** &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| **최단 시간 경로 안내** &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;| **내 정보**
 
 ---
 
